@@ -14,10 +14,20 @@ namespace KeyboardTrainerConsole
 
         // sounds
         static bool enabledSounds = true;
-        static int freqwin = 200;
-        static int freqmiss = 100;
-        static int durwin = 250;
-        static int durmiss = 250;
+        static int freqwin = 200; // частота выигрыша
+        static int freqmiss = 100; // частота мисса
+        static int durwin = 250; // дли-сть выигрыша
+        static int durmiss = 250; // дли-сть проигрыша
+
+        // statc
+        static int level;
+        static int exp; // exp += enteredCharacters с одного слова
+        static int expNeed = 100; // сколько нужно exp для аппа уровня
+        static int money; // деньги будут использоваться для открытия новых режимов
+        static int enteredWords;
+        static int enteredCharacters;
+        static int wins;
+        static int misses;
 
         static void Main() // start
         {
@@ -37,6 +47,7 @@ namespace KeyboardTrainerConsole
                 "\n/help - list of all commands" +
                 "\n/language - change the language" +
                 "\n/sounds - customize the sounds" +
+                "\n/stats - shows your game statistics" +
                 "\n/exit - exit the game");
                 EnterText();
             }
@@ -185,6 +196,22 @@ namespace KeyboardTrainerConsole
                 }
                 EnterText();
             }
+            else if (textEntered == "/stats")
+            {
+                dontGenerateNextWord = true;
+                float winRatio = wins / (wins + misses) * 100f;
+                Console.WriteLine("Your game statistics:" +
+                "\nLevel: " + level +
+                "\nExp: " + exp +
+                "\nNeed exp for the next level: " + (expNeed - exp) +
+                "\nWords entered: " + enteredWords +
+                "\nCharacters entered: " + enteredCharacters +
+                "\nWins: " + wins +
+                "\nMisses: " + misses +
+                "\nWin ratio: " + winRatio + "%"); // почему-то показывает 0
+                EnterText();
+            }
+
             else if (textEntered == "/exit")
             {
                 dontGenerateNextWord = true;
@@ -225,6 +252,17 @@ namespace KeyboardTrainerConsole
             else ChangeLanguage();
         }
 
+        static void LevelCheck()
+        {
+            if (exp >= expNeed)
+            {
+                level += 1;
+                exp -= expNeed;
+                expNeed *= 2;
+                Console.WriteLine("Level raised! You level is now " + level + "! The next level requires " + (expNeed - exp) + " exp.");
+            }
+        }
+
         static void TextGenerator()
         {
             int randomNum = rnd.Next(0, WordsDatabaseScript.maxWordsArray);
@@ -251,14 +289,21 @@ namespace KeyboardTrainerConsole
             Commands();
             if (textEntered == textNeed)
             {
-                Console.WriteLine("Good job!");
+                wins += 1;
+                enteredWords += 1;
+                enteredCharacters += textEntered.Length;
+                exp += textEntered.Length;
+                LevelCheck();
+                Console.WriteLine("Good job! " + "Wins: " + wins + ". Misses: " + misses + ". Characters entered: " + enteredCharacters);
                 Beep(freqwin, durwin);
                 EnterText();
             }
             else
             {
+                misses += 1;
+                //enteredCharacters += textEntered.Length;
                 dontGenerateNextWord = true;
-                Console.WriteLine("Miss!");
+                Console.WriteLine("Miss! " + "Wins: " + wins + ". Misses: " + misses + ". Characters entered: " + enteredCharacters);
                 Beep(freqmiss, durmiss);
                 EnterText();
             }
