@@ -246,7 +246,7 @@ namespace KeyboardTrainerConsole
             {
                 dontGenerateNextWord = false;
             }
-            Console.WriteLine("Enter " + "'" + textNeed + "'");
+            Console.WriteLine("Enter " + "«" + textNeed + "»");
             textEntered = Console.ReadLine();
             Commands();
             if (textEntered == textNeed)
