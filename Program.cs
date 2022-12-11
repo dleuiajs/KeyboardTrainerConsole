@@ -26,8 +26,8 @@ namespace KeyboardTrainerConsole
         static int money; // деньги будут использоваться для открытия новых режимов
         static int enteredWords;
         static int enteredCharacters;
-        static int wins;
-        static int misses;
+        static float wins;
+        static float misses;
 
         static void Main() // start
         {
@@ -46,15 +46,28 @@ namespace KeyboardTrainerConsole
                 Console.WriteLine("Commands:" +
                 "\n/help - list of all commands" +
                 "\n/language - change the language" +
+                "\n/dictionary - change the dictionary" +
                 "\n/sounds - customize the sounds" +
                 "\n/stats - shows your game statistics" +
                 "\n/exit - exit the game");
                 EnterText();
             }
+            else if (textEntered == "/cheat")
+            {
+                dontGenerateNextWord = true;
+                exp += 1000;
+                LevelCheck();
+            }
             else if (textEntered == "/language")
             {
                 dontGenerateNextWord = true;
                 ChangeLanguage();
+                EnterText();
+            }
+            else if (textEntered == "/dictionary")
+            {
+                dontGenerateNextWord = true;
+                ChangeDictionary();
                 EnterText();
             }
             else if (textEntered == "/sounds")
@@ -208,7 +221,7 @@ namespace KeyboardTrainerConsole
                 "\nCharacters entered: " + enteredCharacters +
                 "\nWins: " + wins +
                 "\nMisses: " + misses +
-                "\nWin ratio: " + winRatio + "%"); // почему-то показывает 0
+                "\nWin ratio: " + Math.Round(winRatio, 2) + "%");
                 EnterText();
             }
 
@@ -229,7 +242,7 @@ namespace KeyboardTrainerConsole
 
         static void ChangeLanguage()
         {
-            Console.WriteLine("Choose language:" +
+            Console.WriteLine("Select a language:" +
             "\nenglish" +
             "\nukrainian" +
             "\nrussian");
@@ -249,16 +262,109 @@ namespace KeyboardTrainerConsole
                 WordsDatabaseScript.language = "ukrainian";
                 WordsDatabaseScript.LanguageSetting();
             }
-            else ChangeLanguage();
+            else 
+            {
+                Console.WriteLine("Unknown language!");
+                ChangeLanguage();
+            }
+        }
+
+        static bool changeDictionaryWrited = false;
+        static void ChangeDictionary()
+        {
+            if (changeDictionaryWrited == false)
+            {
+                Console.WriteLine("Select a dictionary:" +
+                "\nnouns" +
+                "\nadjectives" +
+                "\nverbs" +
+                "\nsurnames" +
+                "\nall"
+                );
+            }
+            else
+            {
+                changeDictionaryWrited = false;
+            }
+            textEntered = Console.ReadLine();
+            if (textEntered == "nouns" || textEntered == "Nouns")
+            {
+                WordsDatabaseScript.dictionary = "nouns";
+                WordsDatabaseScript.DictionarySetting();
+            }
+            else if (textEntered == "adjectives" || textEntered == "Adjectives")
+            {
+                if (level >= 5)
+                {
+                    WordsDatabaseScript.dictionary = "adjectives";
+                    WordsDatabaseScript.DictionarySetting();
+                }
+                else
+                {
+                    Console.WriteLine("For the dictionary «adjectives» you need level 5!");
+                    changeDictionaryWrited = true;
+                    ChangeDictionary();
+                }
+            }
+            else if (textEntered == "verbs" || textEntered == "Verbs")
+            {
+                if (level >= 10)
+                {
+                    WordsDatabaseScript.dictionary = "verbs";
+                    WordsDatabaseScript.DictionarySetting();
+                }
+                else
+                {
+                    Console.WriteLine("For the dictionary «verbs» you need level 10!");
+                    changeDictionaryWrited = true;
+                    ChangeDictionary();
+                }
+            }
+            else if (textEntered == "surnames" || textEntered == "Surnames")
+            {
+                if (level >= 15)
+                {
+                    WordsDatabaseScript.dictionary = "surnames";
+                    WordsDatabaseScript.DictionarySetting();
+                }
+                else
+                {
+                    Console.WriteLine("For the dictionary «surnames» you need level 15!");
+                    changeDictionaryWrited = true;
+                    ChangeDictionary();
+                }
+            }
+            else if (textEntered == "all" || textEntered == "All")
+            {
+                if (level >= 20)
+                {
+                    WordsDatabaseScript.dictionary = "all";
+                    WordsDatabaseScript.DictionarySetting();
+                }
+                else
+                {
+                    Console.WriteLine("For the dictionary «all» you need level 20!");
+                    changeDictionaryWrited = true;
+                    ChangeDictionary();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Unknown dictionary!");
+                changeDictionaryWrited = true;
+                ChangeDictionary();
+            }
         }
 
         static void LevelCheck()
         {
+            double floatExpNeed;
             if (exp >= expNeed)
             {
                 level += 1;
                 exp -= expNeed;
-                expNeed *= 2;
+                floatExpNeed = Math.Round(expNeed * 1.5f, 0);
+                expNeed = Convert.ToInt32(floatExpNeed);
                 Console.WriteLine("Level raised! You level is now " + level + "! The next level requires " + (expNeed - exp) + " exp.");
             }
         }

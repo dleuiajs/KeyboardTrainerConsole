@@ -6,17 +6,29 @@ namespace KeyboardTrainerConsole
     internal class WordsDatabaseScript
     {
         public static string language = "english";
-        public static string exePath;
+        public static string dictionary = "nouns";
+        public static string path;
 
         public static string[] words;
         public static int maxWordsArray;
 
+        static void CheckPath()
+        {
+            path = (Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\languages\\" + language + "_" + dictionary + ".txt");
+            words = File.ReadAllLines(path);
+            maxWordsArray = words.Length;
+        }
+
         public static void LanguageSetting()
         {
-            exePath = (Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + language + ".txt");
-            words = File.ReadAllLines(exePath);
-            maxWordsArray = words.Length;
-            Console.WriteLine("Selected language - " + language + ". Number of words: " + maxWordsArray);
+            CheckPath();
+            Console.WriteLine("Selected language - " + language + ", dictionary - " + "«" + dictionary + "». " + "Number of words: " + maxWordsArray);
+        }
+
+        public static void DictionarySetting()
+        {
+            CheckPath();
+            Console.WriteLine("Selected dictionary - " + "«" + dictionary + "»" + " of the " + language + " language. " + "Number of words: " + maxWordsArray);
         }
     }
 }
