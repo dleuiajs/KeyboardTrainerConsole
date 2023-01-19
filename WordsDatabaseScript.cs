@@ -14,7 +14,7 @@ namespace KeyboardTrainerConsole
 
         static void CheckPath()
         {
-            path = (Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\languages\\" + language + "_" + dictionary + ".txt");
+            path = (Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\languages\\" + language + "_" + dictionary + ".txt"); // сделать потом если ошибка то искать на других языках
             words = File.ReadAllLines(path);
             maxWordsArray = words.Length;
         }

@@ -40,6 +40,8 @@ namespace KeyboardTrainerConsole
 
         static void Commands()
         {
+            if (textEntered.StartsWith("/"))
+            {
             if (textEntered == "/help")
             {
                 dontGenerateNextWord = true;
@@ -55,8 +57,9 @@ namespace KeyboardTrainerConsole
             else if (textEntered == "/cheat")
             {
                 dontGenerateNextWord = true;
-                exp += 1000;
+                exp += expNeed;
                 LevelCheck();
+                EnterText();
             }
             else if (textEntered == "/language")
             {
@@ -239,6 +242,7 @@ namespace KeyboardTrainerConsole
                 EnterText();
             }
         }
+        }
 
         static void ChangeLanguage()
         {
@@ -270,16 +274,25 @@ namespace KeyboardTrainerConsole
         }
 
         static bool changeDictionaryWrited = false;
+        const int nounsLvl = 0;
+        const int lettersLvl = 2;
+        const int symbolsLvl = 3;
+        const int adjectivesLvl = 5;
+        const int verbsLvl = 10;
+        const int surnamesLvl = 15;
+        const int allLvl = 20;
         static void ChangeDictionary()
         {
             if (changeDictionaryWrited == false)
             {
                 Console.WriteLine("Select a dictionary:" +
-                "\nnouns" +
-                "\nadjectives" +
-                "\nverbs" +
-                "\nsurnames" +
-                "\nall"
+                "\nnouns" + " (" + nounsLvl + " lvl)" +
+                "\nletters" + " (" + lettersLvl + " lvl)" +
+                "\nsymbols" + " (" + symbolsLvl + " lvl)" +
+                "\nadjectives" + " (" + adjectivesLvl + " lvl)" +
+                "\nverbs" + " (" + verbsLvl + " lvl)" +
+                "\nsurnames" + " (" + surnamesLvl + " lvl)" +
+                "\nall" + " (" + allLvl + " lvl)"
                 );
             }
             else
@@ -292,58 +305,86 @@ namespace KeyboardTrainerConsole
                 WordsDatabaseScript.dictionary = "nouns";
                 WordsDatabaseScript.DictionarySetting();
             }
+            else if (textEntered == "letters" || textEntered == "Letters")
+            {
+                if (level >= lettersLvl)
+                {
+                    WordsDatabaseScript.dictionary = "letters";
+                    WordsDatabaseScript.DictionarySetting();
+                }
+                else
+                {
+                    Console.WriteLine("For the dictionary «letters» you need level " + lettersLvl + "!");
+                    changeDictionaryWrited = true;
+                    ChangeDictionary();
+                }
+            }
+            else if (textEntered == "symbols" || textEntered == "Symbols")
+            {
+                if (level >= symbolsLvl)
+                {
+                    WordsDatabaseScript.dictionary = "symbols";
+                    WordsDatabaseScript.DictionarySetting();
+                }
+                else
+                {
+                    Console.WriteLine("For the dictionary «symbols» you need level " + symbolsLvl + "!");
+                    changeDictionaryWrited = true;
+                    ChangeDictionary();
+                }
+            }
             else if (textEntered == "adjectives" || textEntered == "Adjectives")
             {
-                if (level >= 5)
+                if (level >= adjectivesLvl)
                 {
                     WordsDatabaseScript.dictionary = "adjectives";
                     WordsDatabaseScript.DictionarySetting();
                 }
                 else
                 {
-                    Console.WriteLine("For the dictionary «adjectives» you need level 5!");
+                    Console.WriteLine("For the dictionary «adjectives» you need level " + adjectivesLvl + "!");
                     changeDictionaryWrited = true;
                     ChangeDictionary();
                 }
             }
             else if (textEntered == "verbs" || textEntered == "Verbs")
             {
-                if (level >= 10)
+                if (level >= verbsLvl)
                 {
                     WordsDatabaseScript.dictionary = "verbs";
                     WordsDatabaseScript.DictionarySetting();
                 }
                 else
                 {
-                    Console.WriteLine("For the dictionary «verbs» you need level 10!");
+                    Console.WriteLine("For the dictionary «verbs» you need level " + verbsLvl + "!");
                     changeDictionaryWrited = true;
                     ChangeDictionary();
                 }
             }
             else if (textEntered == "surnames" || textEntered == "Surnames")
             {
-                if (level >= 15)
+                if (level >= surnamesLvl)
                 {
                     WordsDatabaseScript.dictionary = "surnames";
                     WordsDatabaseScript.DictionarySetting();
                 }
                 else
                 {
-                    Console.WriteLine("For the dictionary «surnames» you need level 15!");
+                    Console.WriteLine("For the dictionary «surnames» you need level " + surnamesLvl + "!");
                     changeDictionaryWrited = true;
                     ChangeDictionary();
                 }
             }
             else if (textEntered == "all" || textEntered == "All")
             {
-                if (level >= 20)
+                if (level >= allLvl)
                 {
                     WordsDatabaseScript.dictionary = "all";
                     WordsDatabaseScript.DictionarySetting();
                 }
                 else
                 {
-                    Console.WriteLine("For the dictionary «all» you need level 20!");
+                    Console.WriteLine("For the dictionary «all» you need level " + allLvl + "!");
                     changeDictionaryWrited = true;
                     ChangeDictionary();
                 }
@@ -369,10 +410,13 @@ namespace KeyboardTrainerConsole
             }
         }
 
+        // static bool secWord = false;
         static void TextGenerator()
         {
             int randomNum = rnd.Next(0, WordsDatabaseScript.maxWordsArray);
             textNeed = WordsDatabaseScript.words[randomNum];
+            // int randomNum = rnd.Next(0, WordsDatabaseScript.maxWordsArray);
+            // nextTextNeed = WordsDatabaseScript.words[randomNum];
         }
 
         static void Beep(int frequency, int duration)
