@@ -19,23 +19,76 @@ namespace KeyboardTrainerConsole
         static int durwin = 250; // дли-сть выигрыша
         static int durmiss = 250; // дли-сть проигрыша
 
-        // statc
+        // stats
         static int level;
         static int exp; // exp += enteredCharacters с одного слова
         static int expNeed = 100; // сколько нужно exp для аппа уровня
-        static int money; // деньги будут использоваться для открытия новых режимов
+        // static int money; // деньги будут использоваться для открытия новых режимов
         static int enteredWords;
         static int enteredCharacters;
         static float wins;
         static float misses;
+
+        // accounts
+        static string nick = "Guest"; // ник игрока
+        static bool guest = true; // в режиме гостя ли игрок
+        static bool rememberAccount = false; // запомнить ли этот аккаунт для будущего входа 
 
         static void Main() // start
         {
             Console.OutputEncoding = System.Text.Encoding.Unicode;
             Console.InputEncoding = System.Text.Encoding.Unicode;
 
+            if (rememberAccount == false) // потом брать из файла сохранений пока что это лишь набросок
+            { 
+                LoginInAccount();
+            }
+            else
+            {
+                nick = "test"; // задаем ник с файла
+                guest = false; // задаем с файла
+            }
+
             ChangeLanguage();
             EnterText();
+        }
+
+        static void LoginInAccount()
+        {
+            string textEntered; // введенный текст пользователя
+            bool rembAccEnd = false; // узнали ли мы будет ли запоминаться этот аккаунт в след. раз
+
+            Console.WriteLine("Enter your nickname (minimum 3 ch.) Если вы хотите быть гостем, то напишите /guest");
+            nick = Console.ReadLine();
+            if (nick == "/guest" || nick == "Guest" || nick == "guest")
+            {
+                nick = "Guest";
+                guest = true;
+            }
+            else 
+            {
+                guest = false;
+            }
+            Console.WriteLine("Готово! Ваш ник - " + nick);
+            Console.WriteLine("Хотите ли вы запомнить данный аккаунт для будущего входа? (в любой момент вы сможете сменить аккаунт введя /account) (Y - Yes, N - No)");
+            while (!rembAccEnd)
+            {
+                textEntered = Console.ReadLine();
+                if (textEntered == "Y" || textEntered == "y" || textEntered == "Yes" || textEntered == "yes")
+                {
+                    rememberAccount = true;
+                    rembAccEnd = true;
+                }
+                else if (textEntered == "N" || textEntered == "n" || textEntered == "No" || textEntered == "no")
+                {
+                    rememberAccount = false;
+                    rembAccEnd = true;
+                }
+                else
+                { 
+                    Console.WriteLine("Неизвестный ответ! Напишите Y (Yes) или N (No)");
+                }
+            }
         }
 
         static void Commands()
@@ -51,7 +104,21 @@ namespace KeyboardTrainerConsole
                 "\n/dictionary - change the dictionary" +
                 "\n/sounds - customize the sounds" +
                 "\n/stats - shows your game statistics" +
+                "\n/top - топ игроков" +
+                "\n/account - сменить аккаунт" +
                 "\n/exit - exit the game");
+                EnterText();
+            }
+            else if (textEntered == "/top") 
+            {
+                dontGenerateNextWord = true;
+                Console.WriteLine("Топ игроки:\n" +
+                nick + " - " + level + " уровень");
+                EnterText();
+            }
+            else if (textEntered == "/account") 
+            {
+                LoginInAccount();
                 EnterText();
             }
             else if (textEntered == "/cheat")
@@ -217,6 +284,7 @@ namespace KeyboardTrainerConsole
                 dontGenerateNextWord = true;
                 float winRatio = wins / (wins + misses) * 100f;
                 Console.WriteLine("Your game statistics:" +
+                "\nNickname: " + nick +
                 "\nLevel: " + level +
                 "\nExp: " + exp +
                 "\nNeed exp for the next level: " + (expNeed - exp) +
