@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace KeyboardTrainerConsole
 {
@@ -30,26 +31,23 @@ namespace KeyboardTrainerConsole
         static float misses;
 
         // accounts
-        static string nick = "Guest"; // ник игрока
-        static bool guest = true; // в режиме гостя ли игрок
+        static string nick = "Player"; // ник игрока
         static bool rememberAccount = false; // запомнить ли этот аккаунт для будущего входа 
+
+        // saves
+        public static string[] saveGame;
+        public static string[] saveSettings;
 
         static void Main() // start
         {
             Console.OutputEncoding = System.Text.Encoding.Unicode;
             Console.InputEncoding = System.Text.Encoding.Unicode;
 
-            if (rememberAccount == false) // потом брать из файла сохранений пока что это лишь набросок
-            { 
-                LoginInAccount();
-            }
-            else
-            {
-                nick = "test"; // задаем ник с файла
-                guest = false; // задаем с файла
-            }
+            LoadSettings(); // загружаем настройки из сохранения
 
-            ChangeLanguage();
+            // если аккаунт не запоминался
+            if (rememberAccount == false) LoginInAccount(); // входим в аккаунт
+            LoadGame(); // загружаем игру
             EnterText();
         }
 
@@ -58,17 +56,8 @@ namespace KeyboardTrainerConsole
             string textEntered; // введенный текст пользователя
             bool rembAccEnd = false; // узнали ли мы будет ли запоминаться этот аккаунт в след. раз
 
-            Console.WriteLine("Enter your nickname (minimum 3 ch.) Если вы хотите быть гостем, то напишите /guest");
+            Console.WriteLine("Enter your nickname (minimum 3 ch.)");
             nick = Console.ReadLine();
-            if (nick == "/guest" || nick == "Guest" || nick == "guest")
-            {
-                nick = "Guest";
-                guest = true;
-            }
-            else 
-            {
-                guest = false;
-            }
             Console.WriteLine("Готово! Ваш ник - " + nick);
             Console.WriteLine("Хотите ли вы запомнить данный аккаунт для будущего входа? (в любой момент вы сможете сменить аккаунт введя /account) (Y - Yes, N - No)");
             while (!rembAccEnd)
@@ -85,9 +74,132 @@ namespace KeyboardTrainerConsole
                     rembAccEnd = true;
                 }
                 else
-                { 
+                {
                     Console.WriteLine("Неизвестный ответ! Напишите Y (Yes) или N (No)");
                 }
+            }
+            SaveSettings();
+            LoadGame(); // загружаем игру
+        }
+
+        static void LoadGame()
+        {
+            try
+            {
+                saveGame = File.ReadAllLines(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\saves\\" + nick + ".save"); // загружаем сохранения игры
+                                                                                                                                              // лоадинг статистики
+                level = Convert.ToInt32(saveGame[0]);
+                exp = Convert.ToInt32(saveGame[1]);
+                enteredWords = Convert.ToInt32(saveGame[2]);
+                enteredCharacters = Convert.ToInt32(saveGame[3]);
+                wins = Convert.ToInt32(saveGame[4]);
+                misses = Convert.ToInt32(saveGame[5]);
+                WordsDatabaseScript.language = saveGame[6];
+                if (WordsDatabaseScript.language == "none")
+                {
+                    ChangeLanguage();
+                }
+                else
+                {
+                    WordsDatabaseScript.LanguageSetting();
+                }
+                WordsDatabaseScript.dictionary = saveGame[7];
+                WordsDatabaseScript.DictionarySetting();
+            }
+            catch (Exception e)
+            {
+                //Console.WriteLine("Exception: " + e.Message);
+                Console.WriteLine("Ошибка! Создаем файл сохранения заново.");
+                try
+                {
+                    File.WriteAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\saves\\" + nick + ".save",
+                    0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + "none" + "\n" + "nouns");
+                }
+                catch (Exception e2)
+                {
+                    Console.WriteLine("Exception: " + e2.Message);
+                }
+                finally
+                {
+                    Console.WriteLine("Файл сохранения успешно создан!");
+                    LoadGame();
+                }
+            }
+            finally
+            {
+                Console.WriteLine("Игра успешно загружена!");
+            }
+        }
+
+        static void LoadSettings()
+        {
+            try
+            {
+                saveSettings = File.ReadAllLines(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\saves\\" + "settings.cfg"); // загружаем сохранения настроек
+                                                                                                                                                  // лоадинг настроек
+                enabledSounds = Convert.ToBoolean(saveSettings[0]);
+                freqwin = Convert.ToInt32(saveSettings[1]);
+                freqmiss = Convert.ToInt32(saveSettings[2]);
+                durwin = Convert.ToInt32(saveSettings[3]);
+                durmiss = Convert.ToInt32(saveSettings[4]);
+                if (saveSettings[6] == "True")
+                {
+                    rememberAccount = true;
+                    nick = saveSettings[5];
+                }
+                else if (saveSettings[6] == "False")
+                {
+                    rememberAccount = false;
+                }
+            }
+            catch (Exception e)
+            {
+                //Console.WriteLine("Exception: " + e.Message);
+                Console.WriteLine("Ошибка! Создаем файл настроек заново.");
+                SaveSettings();
+            }
+            finally
+            {
+                Console.WriteLine("Настройки успешно загружены!");
+            }
+        }
+
+        static void SaveGame()
+        {
+            try
+            {
+                //StreamWriter sw = new StreamWriter(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\saves\\" + nick + ".save", true, System.Text.Encoding.UTF8); // открытие файла
+                //sw.WriteLine(nick + "\n" + level + "\n" + exp); // записываем данные
+                // перезаписываем данные
+                File.WriteAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\saves\\" + nick + ".save",
+                level + "\n" + exp + "\n" + enteredWords + "\n" + enteredCharacters + "\n" + wins + "\n" + misses + "\n" + WordsDatabaseScript.language + "\n" + WordsDatabaseScript.dictionary);
+                //sw.Close(); // закрываем файл
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
+            }
+            finally
+            {
+                Console.WriteLine("Игра успешно сохранена!");
+            }
+        }
+
+        static void SaveSettings()
+        {
+            try
+            {
+                // перезаписываем данные
+                File.WriteAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\saves\\" + "settings.cfg",
+                enabledSounds + "\n" + freqwin + "\n" + freqmiss + "\n" + durwin + "\n" + durmiss + "\n" + nick + "\n" + rememberAccount);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
+            }
+            finally
+            {
+                Console.WriteLine("Настройки успешно сохранены!");
             }
         }
 
@@ -95,221 +207,227 @@ namespace KeyboardTrainerConsole
         {
             if (textEntered.StartsWith("/"))
             {
-            if (textEntered == "/help")
-            {
-                dontGenerateNextWord = true;
-                Console.WriteLine("Commands:" +
-                "\n/help - list of all commands" +
-                "\n/language - change the language" +
-                "\n/dictionary - change the dictionary" +
-                "\n/sounds - customize the sounds" +
-                "\n/stats - shows your game statistics" +
-                "\n/top - топ игроков" +
-                "\n/account - сменить аккаунт" +
-                "\n/exit - exit the game");
-                EnterText();
-            }
-            else if (textEntered == "/top") 
-            {
-                dontGenerateNextWord = true;
-                Console.WriteLine("Топ игроки:\n" +
-                nick + " - " + level + " уровень");
-                EnterText();
-            }
-            else if (textEntered == "/account") 
-            {
-                LoginInAccount();
-                EnterText();
-            }
-            else if (textEntered == "/cheat")
-            {
-                dontGenerateNextWord = true;
-                exp += expNeed;
-                LevelCheck();
-                EnterText();
-            }
-            else if (textEntered == "/language")
-            {
-                dontGenerateNextWord = true;
-                ChangeLanguage();
-                EnterText();
-            }
-            else if (textEntered == "/dictionary")
-            {
-                dontGenerateNextWord = true;
-                ChangeDictionary();
-                EnterText();
-            }
-            else if (textEntered == "/sounds")
-            {
-                dontGenerateNextWord = true;
-                Console.WriteLine(
-                "To disable sounds write - /disablesounds" +
-                "\nTo enable sounds write - /enablesounds" +
-                "\nTo change the frequency of the win sound, write - /freqwin" +
-                "\nTo change the frequency of the miss sound, write - /freqmiss" +
-                "\nTo change the duration of the win sound, write: - /durwin" +
-                "\nTo change the duration of the miss sound, write: - /misswin"
-                );
-                EnterText();
-            }
-            else if (textEntered == "/disablesounds")
-            {
-                dontGenerateNextWord = true;
-                enabledSounds = false;
-                Console.WriteLine("Sounds are now disabled.");
-                EnterText();
-            }
-            else if (textEntered == "/enablesounds")
-            {
-                dontGenerateNextWord = true;
-                enabledSounds = true;
-                Console.WriteLine("Sounds are now enabled.");
-                EnterText();
-            }
-            else if (textEntered == "/freqwin")
-            {
-                Console.WriteLine("Enter frequency in Hz from 37 to 32767 (default 200)");
-                dontGenerateNextWord = true;
-                int num;
-                textEntered = Console.ReadLine();
-                bool tryParse = int.TryParse(textEntered, out num);
-                if (tryParse)
+                if (textEntered == "/help")
                 {
-                    if (num >= 37 && num <= 32767)
+                    dontGenerateNextWord = true;
+                    Console.WriteLine("Commands:" +
+                    "\n/help - list of all commands" +
+                    "\n/language - change the language" +
+                    "\n/dictionary - change the dictionary" +
+                    "\n/sounds - customize the sounds" +
+                    "\n/stats - shows your game statistics" +
+                    "\n/top - топ игроков" +
+                    "\n/account - сменить аккаунт" +
+                    "\n/exit - exit the game");
+                    EnterText();
+                }
+                else if (textEntered == "/top")
+                {
+                    dontGenerateNextWord = true;
+                    Console.WriteLine("Топ игроки:\n" +
+                    nick + " - " + level + " уровень");
+                    EnterText();
+                }
+                else if (textEntered == "/account")
+                {
+                    LoginInAccount();
+                    EnterText();
+                }
+                else if (textEntered == "/cheat")
+                {
+                    dontGenerateNextWord = true;
+                    exp += expNeed;
+                    LevelCheck();
+                    EnterText();
+                }
+                else if (textEntered == "/language")
+                {
+                    dontGenerateNextWord = true;
+                    ChangeLanguage();
+                    EnterText();
+                }
+                else if (textEntered == "/dictionary")
+                {
+                    dontGenerateNextWord = true;
+                    ChangeDictionary();
+                    EnterText();
+                }
+                else if (textEntered == "/sounds")
+                {
+                    dontGenerateNextWord = true;
+                    Console.WriteLine(
+                    "To disable sounds write - /disablesounds" +
+                    "\nTo enable sounds write - /enablesounds" +
+                    "\nTo change the frequency of the win sound, write - /freqwin" +
+                    "\nTo change the frequency of the miss sound, write - /freqmiss" +
+                    "\nTo change the duration of the win sound, write: - /durwin" +
+                    "\nTo change the duration of the miss sound, write: - /misswin"
+                    );
+                    EnterText();
+                }
+                else if (textEntered == "/disablesounds")
+                {
+                    dontGenerateNextWord = true;
+                    enabledSounds = false;
+                    Console.WriteLine("Sounds are now disabled.");
+                    SaveSettings();
+                    EnterText();
+                }
+                else if (textEntered == "/enablesounds")
+                {
+                    dontGenerateNextWord = true;
+                    enabledSounds = true;
+                    Console.WriteLine("Sounds are now enabled.");
+                    SaveSettings();
+                    EnterText();
+                }
+                else if (textEntered == "/freqwin")
+                {
+                    Console.WriteLine("Enter frequency in Hz from 37 to 32767 (default 200)");
+                    dontGenerateNextWord = true;
+                    int num;
+                    textEntered = Console.ReadLine();
+                    bool tryParse = int.TryParse(textEntered, out num);
+                    if (tryParse)
                     {
-                        freqwin = num;
-                        Console.WriteLine("Now the frequency of the win sound is " + freqwin + " Hz.");
-                        EnterText();
+                        if (num >= 37 && num <= 32767)
+                        {
+                            freqwin = num;
+                            Console.WriteLine("Now the frequency of the win sound is " + freqwin + " Hz.");
+                            SaveSettings();
+                            EnterText();
+                        }
+                        else
+                        {
+                            Console.WriteLine("The frequency cannot be less than 37 or more than 32767 hertz.");
+                            EnterText();
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("The frequency cannot be less than 37 or more than 32767 hertz.");
+                        Console.WriteLine("Enter a number!");
                         EnterText();
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Enter a number!");
                     EnterText();
                 }
-                EnterText();
-            }
-            else if (textEntered == "/freqmiss")
-            {
-                Console.WriteLine("Enter frequency in Hz from 37 to 32767 (default 100)");
-                dontGenerateNextWord = true;
-                int num;
-                textEntered = Console.ReadLine();
-                bool tryParse = int.TryParse(textEntered, out num);
-                if (tryParse)
+                else if (textEntered == "/freqmiss")
                 {
-                    if (num >= 37 && num <= 32767)
+                    Console.WriteLine("Enter frequency in Hz from 37 to 32767 (default 100)");
+                    dontGenerateNextWord = true;
+                    int num;
+                    textEntered = Console.ReadLine();
+                    bool tryParse = int.TryParse(textEntered, out num);
+                    if (tryParse)
                     {
-                        freqmiss = num;
-                        Console.WriteLine("Now the frequency of the win sound is " + freqmiss + " Hz.");
-                        EnterText();
+                        if (num >= 37 && num <= 32767)
+                        {
+                            freqmiss = num;
+                            Console.WriteLine("Now the frequency of the win sound is " + freqmiss + " Hz.");
+                            SaveSettings();
+                            EnterText();
+                        }
+                        else
+                        {
+                            Console.WriteLine("The frequency cannot be less than 37 or more than 32767 hertz.");
+                            EnterText();
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("The frequency cannot be less than 37 or more than 32767 hertz.");
+                        Console.WriteLine("Enter a number!");
                         EnterText();
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Enter a number!");
                     EnterText();
                 }
-                EnterText();
-            }
-            else if (textEntered == "/durwin")
-            {
-                Console.WriteLine("Enter frequency in ms from 1 to 10000 (default 250)");
-                dontGenerateNextWord = true;
-                int num;
-                textEntered = Console.ReadLine();
-                bool tryParse = int.TryParse(textEntered, out num);
-                if (tryParse)
+                else if (textEntered == "/durwin")
                 {
-                    if (num > 0 && num < 10000)
+                    Console.WriteLine("Enter frequency in ms from 1 to 10000 (default 250)");
+                    dontGenerateNextWord = true;
+                    int num;
+                    textEntered = Console.ReadLine();
+                    bool tryParse = int.TryParse(textEntered, out num);
+                    if (tryParse)
                     {
-                        durwin = num;
-                        Console.WriteLine("Now the duration of the win sound is " + durwin + " ms.");
-                        EnterText();
+                        if (num > 0 && num < 10000)
+                        {
+                            durwin = num;
+                            Console.WriteLine("Now the duration of the win sound is " + durwin + " ms.");
+                            SaveSettings();
+                            EnterText();
+                        }
+                        else
+                        {
+                            Console.WriteLine("The sound duration cannot be less than 0 or more than 10000 ms.");
+                            EnterText();
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("The sound duration cannot be less than 0 or more than 10000 ms.");
+                        Console.WriteLine("Enter a number!");
                         EnterText();
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Enter a number!");
                     EnterText();
                 }
-                EnterText();
-            }
-            else if (textEntered == "/durmiss")
-            {
-                Console.WriteLine("Enter frequency in ms from 1 to 10000 (default 250)");
-                dontGenerateNextWord = true;
-                int num;
-                textEntered = Console.ReadLine();
-                bool tryParse = int.TryParse(textEntered, out num);
-                if (tryParse)
+                else if (textEntered == "/durmiss")
                 {
-                    if (num > 0 && num < 10000)
+                    Console.WriteLine("Enter frequency in ms from 1 to 10000 (default 250)");
+                    dontGenerateNextWord = true;
+                    int num;
+                    textEntered = Console.ReadLine();
+                    bool tryParse = int.TryParse(textEntered, out num);
+                    if (tryParse)
                     {
-                        durmiss = num;
-                        Console.WriteLine("Now the duration of the win sound is " + durmiss + " ms.");
-                        EnterText();
+                        if (num > 0 && num < 10000)
+                        {
+                            durmiss = num;
+                            Console.WriteLine("Now the duration of the miss sound is " + durmiss + " ms.");
+                            SaveSettings();
+                            EnterText();
+                        }
+                        else
+                        {
+                            Console.WriteLine("The sound duration cannot be less than 0 or more than 10000 ms.");
+                            EnterText();
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("The sound duration cannot be less than 0 or more than 10000 ms.");
+                        Console.WriteLine("Enter a number!");
                         EnterText();
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Enter a number!");
                     EnterText();
                 }
-                EnterText();
-            }
-            else if (textEntered == "/stats")
-            {
-                dontGenerateNextWord = true;
-                float winRatio = wins / (wins + misses) * 100f;
-                Console.WriteLine("Your game statistics:" +
-                "\nNickname: " + nick +
-                "\nLevel: " + level +
-                "\nExp: " + exp +
-                "\nNeed exp for the next level: " + (expNeed - exp) +
-                "\nWords entered: " + enteredWords +
-                "\nCharacters entered: " + enteredCharacters +
-                "\nWins: " + wins +
-                "\nMisses: " + misses +
-                "\nWin ratio: " + Math.Round(winRatio, 2) + "%");
-                EnterText();
-            }
+                else if (textEntered == "/stats")
+                {
+                    dontGenerateNextWord = true;
+                    float winRatio = wins / (wins + misses) * 100f;
+                    Console.WriteLine("Your game statistics:" +
+                    "\nNickname: " + nick +
+                    "\nLevel: " + level +
+                    "\nExp: " + exp +
+                    "\nNeed exp for the next level: " + (expNeed - exp) +
+                    "\nWords entered: " + enteredWords +
+                    "\nCharacters entered: " + enteredCharacters +
+                    "\nWins: " + wins +
+                    "\nMisses: " + misses +
+                    "\nWin ratio: " + Math.Round(winRatio, 2) + "%");
+                    EnterText();
+                }
 
-            else if (textEntered == "/exit")
-            {
-                dontGenerateNextWord = true;
-                Console.WriteLine("Goodbye!");
-                Environment.Exit(0);
-                EnterText();
+                else if (textEntered == "/exit")
+                {
+                    dontGenerateNextWord = true;
+                    Console.WriteLine("Goodbye!");
+                    Environment.Exit(0);
+                    EnterText();
+                }
+                else if (textEntered.StartsWith("/"))
+                {
+                    dontGenerateNextWord = true;
+                    Console.WriteLine("Unknown сommand!");
+                    EnterText();
+                }
             }
-            else if (textEntered.StartsWith("/"))
-            {
-                dontGenerateNextWord = true;
-                Console.WriteLine("Unknown сommand!");
-                EnterText();
-            }
-        }
         }
 
         static void ChangeLanguage()
@@ -334,11 +452,12 @@ namespace KeyboardTrainerConsole
                 WordsDatabaseScript.language = "ukrainian";
                 WordsDatabaseScript.LanguageSetting();
             }
-            else 
+            else
             {
                 Console.WriteLine("Unknown language!");
                 ChangeLanguage();
             }
+            SaveGame();
         }
 
         static bool changeDictionaryWrited = false;
@@ -463,6 +582,7 @@ namespace KeyboardTrainerConsole
                 changeDictionaryWrited = true;
                 ChangeDictionary();
             }
+            SaveGame();
         }
 
         static void LevelCheck()
@@ -475,6 +595,7 @@ namespace KeyboardTrainerConsole
                 floatExpNeed = Math.Round(expNeed * 1.5f, 0);
                 expNeed = Convert.ToInt32(floatExpNeed);
                 Console.WriteLine("Level raised! You level is now " + level + "! The next level requires " + (expNeed - exp) + " exp.");
+                SaveGame();
             }
         }
 
@@ -514,6 +635,7 @@ namespace KeyboardTrainerConsole
                 LevelCheck();
                 Console.WriteLine("Good job! " + "Wins: " + wins + ". Misses: " + misses + ". Characters entered: " + enteredCharacters);
                 Beep(freqwin, durwin);
+                SaveGame();
                 EnterText();
             }
             else
@@ -523,6 +645,7 @@ namespace KeyboardTrainerConsole
                 dontGenerateNextWord = true;
                 Console.WriteLine("Miss! " + "Wins: " + wins + ". Misses: " + misses + ". Characters entered: " + enteredCharacters);
                 Beep(freqmiss, durmiss);
+                SaveGame();
                 EnterText();
             }
         }

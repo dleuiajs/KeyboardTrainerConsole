@@ -5,7 +5,7 @@ namespace KeyboardTrainerConsole
 {
     internal class WordsDatabaseScript
     {
-        public static string language = "english";
+        public static string language = "none";
         public static string dictionary = "nouns";
         public static string path;
 
@@ -14,9 +14,18 @@ namespace KeyboardTrainerConsole
 
         static void CheckPath()
         {
-            path = (Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\languages\\" + language + "_" + dictionary + ".txt"); // сделать потом если ошибка то искать на других языках
-            words = File.ReadAllLines(path);
-            maxWordsArray = words.Length;
+            try
+            {
+                path = (Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\languages\\" + language + "_" + dictionary + ".txt"); // сделать потом если ошибка то искать на других языках
+                words = File.ReadAllLines(path);
+                maxWordsArray = words.Length;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("К сожалению, данного словаря на языке " + language + " еще нет. Попробуйте с другим языком.");
+                dictionary = "nouns";
+                // CheckPath();
+            }
         }
 
         public static void LanguageSetting()
