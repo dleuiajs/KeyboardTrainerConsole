@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.IO;
 
 namespace KeyboardTrainerConsole
 {
@@ -35,6 +36,7 @@ namespace KeyboardTrainerConsole
         static bool rememberAccount = false; // запомнить ли этот аккаунт для будущего входа 
 
         // saves
+        //string md = Environment.GetFolderPath(Environment.SpecialFolder.Personal); // path to my documents
         public static string[] saveGame;
         public static string[] saveSettings;
 
@@ -92,7 +94,7 @@ namespace KeyboardTrainerConsole
         {
             try
             {
-                saveGame = File.ReadAllLines(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\saves\\" + nick + ".save"); // загружаем сохранения игры
+                saveGame = File.ReadAllLines(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\.game\\saves\\" + nick + ".save"); // загружаем сохранения игры
                 // лоадинг статистики
                 level = Convert.ToInt32(saveGame[0]);
                 exp = Convert.ToInt32(saveGame[1]);
@@ -117,7 +119,7 @@ namespace KeyboardTrainerConsole
                 //Console.WriteLine("Ошибка! Создаем файл сохранения заново.");
                 try
                 {
-                    File.WriteAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\saves\\" + nick + ".save",
+                    File.WriteAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\.game\\saves\\" + nick + ".save",
                     0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + "none" + "\n" + "nouns");
                 }
                 catch (Exception e2)
@@ -140,7 +142,7 @@ namespace KeyboardTrainerConsole
         {
             try
             {
-                saveSettings = File.ReadAllLines(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\saves\\" + "settings.cfg"); // загружаем сохранения настроек
+                saveSettings = File.ReadAllLines(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\.game\\settings.cfg"); // загружаем сохранения настроек
                 // лоадинг настроек
                 enabledSounds = Convert.ToBoolean(saveSettings[0]);
                 freqwin = Convert.ToInt32(saveSettings[1]);
@@ -173,7 +175,7 @@ namespace KeyboardTrainerConsole
             try
             {
                 // перезаписываем данные
-                File.WriteAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\saves\\" + nick + ".save",
+                File.WriteAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\.game\\saves\\" + nick + ".save",
                 level + "\n" + exp + "\n" + enteredWords + "\n" + enteredCharacters + "\n" + wins + "\n" + misses + "\n" + WordsDatabaseScript.language + "\n" + WordsDatabaseScript.dictionary);
             }
             catch (Exception e)
@@ -191,7 +193,7 @@ namespace KeyboardTrainerConsole
             try
             {
                 // перезаписываем данные
-                File.WriteAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\saves\\" + "settings.cfg",
+                File.WriteAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\.game\\settings.cfg",
                 enabledSounds + "\n" + freqwin + "\n" + freqmiss + "\n" + durwin + "\n" + durmiss + "\n" + nick + "\n" + rememberAccount);
             }
             catch (Exception e)
@@ -203,7 +205,7 @@ namespace KeyboardTrainerConsole
                 //Console.WriteLine("Настройки успешно сохранены!");
             }
         }
-
+        public static string[] filesSaves;
         static void Commands()
         {
             if (textEntered.StartsWith("/"))
@@ -222,11 +224,24 @@ namespace KeyboardTrainerConsole
                     "\n/exit - exit the game");
                     EnterText();
                 }
+
+                else if (textEntered == "/test")
+                {
+                    filesSaves = Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\.game\\saves\\");
+                    Console.WriteLine(filesSaves.Length);
+                }
                 else if (textEntered == "/top")
                 {
                     dontGenerateNextWord = true;
-                    Console.WriteLine("Топ игроки:\n" +
-                    nick + " - " + level + " уровень");
+                    // Console.WriteLine("Топ игроки:\n" +
+                    // nick + " - " + level + " уровень");
+                    filesSaves = Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\.game\\saves\\");
+                    Console.WriteLine("Топ игроки:");
+                    for (int i = 0; i < filesSaves.Length; i++)
+                    {
+                        string[] save = File.ReadAllLines(filesSaves[i]);
+                        Console.WriteLine(Path.GetFileName(filesSaves[i]).Replace(".save","") + " - " + save[0] + " level");
+                    }
                     EnterText();
                 }
                 else if (textEntered == "/account")

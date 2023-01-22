@@ -16,7 +16,7 @@ namespace KeyboardTrainerConsole
         {
             try
             {
-                path = (Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\languages\\" + language + "_" + dictionary + ".txt"); // сделать потом если ошибка то искать на других языках
+                path = (Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\.game\\languages\\" + language + "_" + dictionary + ".txt"); // сделать потом если ошибка то искать на других языках
                 words = File.ReadAllLines(path);
                 maxWordsArray = words.Length;
             }
