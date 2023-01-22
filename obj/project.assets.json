@@ -8,24 +8,26 @@
     "net6.0": []
   },
   "packageFolders": {
-    "C:\\Users\\User\\.nuget\\packages\\": {}
+    "C:\\Users\\jduej\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "G:\\Programming\\C#\\Projects (Visual Studio Code)\\GitHub\\KeyboardTrainerConsole\\KeyboardTrainerConsole.csproj",
+      "projectUniqueName": "A:\\Programming\\Visual Studio\\C#\\GitHub Projects\\KeyboardTrainerConsole\\KeyboardTrainerConsole.csproj",
       "projectName": "KeyboardTrainerConsole",
-      "projectPath": "G:\\Programming\\C#\\Projects (Visual Studio Code)\\GitHub\\KeyboardTrainerConsole\\KeyboardTrainerConsole.csproj",
-      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "G:\\Programming\\C#\\Projects (Visual Studio Code)\\GitHub\\KeyboardTrainerConsole\\obj\\",
+      "projectPath": "A:\\Programming\\Visual Studio\\C#\\GitHub Projects\\KeyboardTrainerConsole\\KeyboardTrainerConsole.csproj",
+      "packagesPath": "C:\\Users\\jduej\\.nuget\\packages\\",
+      "outputPath": "A:\\Programming\\Visual Studio\\C#\\GitHub Projects\\KeyboardTrainerConsole\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\jduej\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -49,8 +51,7 @@
           "net47",
           "net471",
           "net472",
-          "net48",
-          "net481"
+          "net48"
         ],
         "assetTargetFallback": true,
         "warn": true,
@@ -59,7 +60,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -31,7 +31,6 @@ namespace KeyboardTrainerConsole
         public static void LanguageSetting()
         {
             CheckPath();
-            Console.WriteLine("Selected language - " + language + ", dictionary - " + "«" + dictionary + "». " + "Number of words: " + maxWordsArray);
         }
 
         public static void DictionarySetting()

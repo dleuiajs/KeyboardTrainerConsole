@@ -46,8 +46,14 @@ namespace KeyboardTrainerConsole
             LoadSettings(); // загружаем настройки из сохранения
 
             // если аккаунт не запоминался
-            if (rememberAccount == false) LoginInAccount(); // входим в аккаунт
-            LoadGame(); // загружаем игру
+            if (!rememberAccount)
+            {
+                LoginInAccount(); // входим в аккаунт
+            }
+            else
+            {
+                LoadGame(); // загружаем игру
+            }
             EnterText();
         }
 
@@ -87,7 +93,7 @@ namespace KeyboardTrainerConsole
             try
             {
                 saveGame = File.ReadAllLines(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\saves\\" + nick + ".save"); // загружаем сохранения игры
-                                                                                                                                              // лоадинг статистики
+                // лоадинг статистики
                 level = Convert.ToInt32(saveGame[0]);
                 exp = Convert.ToInt32(saveGame[1]);
                 enteredWords = Convert.ToInt32(saveGame[2]);
@@ -108,8 +114,7 @@ namespace KeyboardTrainerConsole
             }
             catch (Exception e)
             {
-                //Console.WriteLine("Exception: " + e.Message);
-                Console.WriteLine("Ошибка! Создаем файл сохранения заново.");
+                //Console.WriteLine("Ошибка! Создаем файл сохранения заново.");
                 try
                 {
                     File.WriteAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\saves\\" + nick + ".save",
@@ -121,13 +126,13 @@ namespace KeyboardTrainerConsole
                 }
                 finally
                 {
-                    Console.WriteLine("Файл сохранения успешно создан!");
+                    //Console.WriteLine("Файл сохранения успешно создан!");
                     LoadGame();
                 }
             }
             finally
             {
-                Console.WriteLine("Игра успешно загружена!");
+                //Console.WriteLine("Игра успешно загружена!");
             }
         }
 
@@ -136,7 +141,7 @@ namespace KeyboardTrainerConsole
             try
             {
                 saveSettings = File.ReadAllLines(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\saves\\" + "settings.cfg"); // загружаем сохранения настроек
-                                                                                                                                                  // лоадинг настроек
+                // лоадинг настроек
                 enabledSounds = Convert.ToBoolean(saveSettings[0]);
                 freqwin = Convert.ToInt32(saveSettings[1]);
                 freqmiss = Convert.ToInt32(saveSettings[2]);
@@ -154,13 +159,12 @@ namespace KeyboardTrainerConsole
             }
             catch (Exception e)
             {
-                //Console.WriteLine("Exception: " + e.Message);
-                Console.WriteLine("Ошибка! Создаем файл настроек заново.");
+                //Console.WriteLine("Ошибка! Создаем файл настроек заново.");
                 SaveSettings();
             }
             finally
             {
-                Console.WriteLine("Настройки успешно загружены!");
+                //Console.WriteLine("Настройки успешно загружены!");
             }
         }
 
@@ -168,12 +172,9 @@ namespace KeyboardTrainerConsole
         {
             try
             {
-                //StreamWriter sw = new StreamWriter(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\saves\\" + nick + ".save", true, System.Text.Encoding.UTF8); // открытие файла
-                //sw.WriteLine(nick + "\n" + level + "\n" + exp); // записываем данные
                 // перезаписываем данные
                 File.WriteAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\saves\\" + nick + ".save",
                 level + "\n" + exp + "\n" + enteredWords + "\n" + enteredCharacters + "\n" + wins + "\n" + misses + "\n" + WordsDatabaseScript.language + "\n" + WordsDatabaseScript.dictionary);
-                //sw.Close(); // закрываем файл
             }
             catch (Exception e)
             {
@@ -181,7 +182,7 @@ namespace KeyboardTrainerConsole
             }
             finally
             {
-                Console.WriteLine("Игра успешно сохранена!");
+                //Console.WriteLine("Игра успешно сохранена!");
             }
         }
 
@@ -199,7 +200,7 @@ namespace KeyboardTrainerConsole
             }
             finally
             {
-                Console.WriteLine("Настройки успешно сохранены!");
+                //Console.WriteLine("Настройки успешно сохранены!");
             }
         }
 
@@ -244,6 +245,7 @@ namespace KeyboardTrainerConsole
                 {
                     dontGenerateNextWord = true;
                     ChangeLanguage();
+                    Console.WriteLine("Selected language - " + WordsDatabaseScript.language + ", dictionary - " + "«" + WordsDatabaseScript.dictionary + "». " + "Number of words: " + WordsDatabaseScript.maxWordsArray);
                     EnterText();
                 }
                 else if (textEntered == "/dictionary")

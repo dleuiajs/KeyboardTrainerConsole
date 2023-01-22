@@ -28,3 +28,18 @@ G:\Programming\C#\Projects (Visual Studio Code)\GitHub\KeyboardTrainerConsole\ob
 G:\Programming\C#\Projects (Visual Studio Code)\GitHub\KeyboardTrainerConsole\obj\Debug\net6.0\KeyboardTrainerConsole.pdb
 G:\Programming\C#\Projects (Visual Studio Code)\GitHub\KeyboardTrainerConsole\obj\Debug\net6.0\KeyboardTrainerConsole.genruntimeconfig.cache
 G:\Programming\C#\Projects (Visual Studio Code)\GitHub\KeyboardTrainerConsole\obj\Debug\net6.0\ref\KeyboardTrainerConsole.dll
+A:\Programming\Visual Studio\C#\GitHub Projects\KeyboardTrainerConsole\bin\Debug\net6.0\KeyboardTrainerConsole.exe
+A:\Programming\Visual Studio\C#\GitHub Projects\KeyboardTrainerConsole\bin\Debug\net6.0\KeyboardTrainerConsole.deps.json
+A:\Programming\Visual Studio\C#\GitHub Projects\KeyboardTrainerConsole\bin\Debug\net6.0\KeyboardTrainerConsole.runtimeconfig.json
+A:\Programming\Visual Studio\C#\GitHub Projects\KeyboardTrainerConsole\bin\Debug\net6.0\KeyboardTrainerConsole.dll
+A:\Programming\Visual Studio\C#\GitHub Projects\KeyboardTrainerConsole\bin\Debug\net6.0\ref\KeyboardTrainerConsole.dll
+A:\Programming\Visual Studio\C#\GitHub Projects\KeyboardTrainerConsole\bin\Debug\net6.0\KeyboardTrainerConsole.pdb
+A:\Programming\Visual Studio\C#\GitHub Projects\KeyboardTrainerConsole\obj\Debug\net6.0\KeyboardTrainerConsole.csproj.AssemblyReference.cache
+A:\Programming\Visual Studio\C#\GitHub Projects\KeyboardTrainerConsole\obj\Debug\net6.0\KeyboardTrainerConsole.GeneratedMSBuildEditorConfig.editorconfig
+A:\Programming\Visual Studio\C#\GitHub Projects\KeyboardTrainerConsole\obj\Debug\net6.0\KeyboardTrainerConsole.AssemblyInfoInputs.cache
+A:\Programming\Visual Studio\C#\GitHub Projects\KeyboardTrainerConsole\obj\Debug\net6.0\KeyboardTrainerConsole.AssemblyInfo.cs
+A:\Programming\Visual Studio\C#\GitHub Projects\KeyboardTrainerConsole\obj\Debug\net6.0\KeyboardTrainerConsole.csproj.CoreCompileInputs.cache
+A:\Programming\Visual Studio\C#\GitHub Projects\KeyboardTrainerConsole\obj\Debug\net6.0\KeyboardTrainerConsole.dll
+A:\Programming\Visual Studio\C#\GitHub Projects\KeyboardTrainerConsole\obj\Debug\net6.0\ref\KeyboardTrainerConsole.dll
+A:\Programming\Visual Studio\C#\GitHub Projects\KeyboardTrainerConsole\obj\Debug\net6.0\KeyboardTrainerConsole.pdb
+A:\Programming\Visual Studio\C#\GitHub Projects\KeyboardTrainerConsole\obj\Debug\net6.0\KeyboardTrainerConsole.genruntimeconfig.cache
