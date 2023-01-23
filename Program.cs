@@ -13,6 +13,7 @@ namespace KeyboardTrainerConsole
         // generate words
         static Random rnd = new Random();
         static bool dontGenerateNextWord = false;
+        static int maxSymbols = 999; // максимальное кол-во символов в слове. 999 - default
 
         // sounds
         static bool enabledSounds = true;
@@ -25,7 +26,6 @@ namespace KeyboardTrainerConsole
         static int level;
         static int exp; // exp += enteredCharacters с одного слова
         static int expNeed = 100; // сколько нужно exp для аппа уровня
-        // static int money; // деньги будут использоваться для открытия новых режимов
         static int enteredWords;
         static int enteredCharacters;
         static float wins;
@@ -37,8 +37,9 @@ namespace KeyboardTrainerConsole
 
         // saves
         //string md = Environment.GetFolderPath(Environment.SpecialFolder.Personal); // path to my documents
-        public static string[] saveGame;
-        public static string[] saveSettings;
+        public static string[] saveGame; // массив с данными сохранения игры
+        public static string[] saveSettings; // массив с данными сохранения настроек
+        public static string[] filesSaves; // пути ко всем файлам сохранениям
 
         static void Main() // start
         {
@@ -64,7 +65,7 @@ namespace KeyboardTrainerConsole
             string textEntered; // введенный текст пользователя
             bool rembAccEnd = false; // узнали ли мы будет ли запоминаться этот аккаунт в след. раз
 
-            Console.WriteLine("Enter your nickname (minimum 3 ch.)");
+            Console.WriteLine("Enter your nickname");
             nick = Console.ReadLine();
             Console.WriteLine("Готово! Ваш ник - " + nick);
             Console.WriteLine("Хотите ли вы запомнить данный аккаунт для будущего входа? (в любой момент вы сможете сменить аккаунт введя /account) (Y - Yes, N - No)");
@@ -113,6 +114,8 @@ namespace KeyboardTrainerConsole
                 }
                 WordsDatabaseScript.dictionary = saveGame[7];
                 WordsDatabaseScript.DictionarySetting();
+                expNeed = Convert.ToInt32(saveGame[8]);
+                maxSymbols = Convert.ToInt32(saveGame[9]);
             }
             catch (Exception e)
             {
@@ -120,7 +123,7 @@ namespace KeyboardTrainerConsole
                 try
                 {
                     File.WriteAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\.game\\saves\\" + nick + ".save",
-                    0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + "none" + "\n" + "nouns");
+                    0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + "none" + "\n" + "nouns" + "\n" + 100 + "\n" + 999);
                 }
                 catch (Exception e2)
                 {
@@ -176,7 +179,7 @@ namespace KeyboardTrainerConsole
             {
                 // перезаписываем данные
                 File.WriteAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\.game\\saves\\" + nick + ".save",
-                level + "\n" + exp + "\n" + enteredWords + "\n" + enteredCharacters + "\n" + wins + "\n" + misses + "\n" + WordsDatabaseScript.language + "\n" + WordsDatabaseScript.dictionary);
+                level + "\n" + exp + "\n" + enteredWords + "\n" + enteredCharacters + "\n" + wins + "\n" + misses + "\n" + WordsDatabaseScript.language + "\n" + WordsDatabaseScript.dictionary + "\n" + expNeed + "\n" + maxSymbols);
             }
             catch (Exception e)
             {
@@ -205,7 +208,7 @@ namespace KeyboardTrainerConsole
                 //Console.WriteLine("Настройки успешно сохранены!");
             }
         }
-        public static string[] filesSaves;
+
         static void Commands()
         {
             if (textEntered.StartsWith("/"))
@@ -217,18 +220,63 @@ namespace KeyboardTrainerConsole
                     "\n/help - list of all commands" +
                     "\n/language - change the language" +
                     "\n/dictionary - change the dictionary" +
+                    "\n/difficulty - change the difficulty" +
                     "\n/sounds - customize the sounds" +
                     "\n/stats - shows your game statistics" +
                     "\n/top - топ игроков" +
                     "\n/account - сменить аккаунт" +
+                    "\n/about - информация про игру" +
                     "\n/exit - exit the game");
                     EnterText();
                 }
-
-                else if (textEntered == "/test")
+                else if (textEntered == "/difficulty")
                 {
-                    filesSaves = Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\.game\\saves\\");
-                    Console.WriteLine(filesSaves.Length);
+                    dontGenerateNextWord = true;
+                    string difficultyEntered;
+                    Console.WriteLine("Укажите сложность:" +
+                    "\n1 - Ребенок (до 3 символов в слове)" +
+                    "\n2 - Очень легкая (до 5 символов в слове)" +
+                    "\n3 - Легкая (до 7 символов в слове)" +
+                    "\n4 - Средняя (до 10 символов в слове)" +
+                    "\n5 - Обычная (неограниченно символов в слове) - default");
+                    difficultyEntered = Console.ReadLine();
+                    if (difficultyEntered == "1")
+                    {
+                        maxSymbols = 3;
+                        Console.WriteLine("Установлена сложность - ребенок");
+                    }
+                    else if (difficultyEntered == "2")
+                    {
+                        maxSymbols = 5;
+                        Console.WriteLine("Установлена сложность - очень легкая");
+                    }
+                    else if (difficultyEntered == "3")
+                    {
+                        maxSymbols = 7;
+                        Console.WriteLine("Установлена сложность - легкая");
+                    }
+                    else if (difficultyEntered == "4")
+                    {
+                        maxSymbols = 10;
+                        Console.WriteLine("Установлена сложность - средняя");
+                    }
+                    else if (difficultyEntered == "5")
+                    {
+                        maxSymbols = 999;
+                        Console.WriteLine("Установлена сложность - обычная");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Неизвестный ответ! Введите число от 1 до 5.");
+                    }
+                    SaveGame();
+                    EnterText();
+                }
+                else if (textEntered == "/about")
+                {
+                    dontGenerateNextWord = true;
+                    Console.WriteLine("Разработчик: dleuiajs \nВерсия: 0.000");
+                    EnterText();
                 }
                 else if (textEntered == "/top")
                 {
@@ -616,13 +664,17 @@ namespace KeyboardTrainerConsole
             }
         }
 
-        // static bool secWord = false;
         static void TextGenerator()
         {
             int randomNum = rnd.Next(0, WordsDatabaseScript.maxWordsArray);
-            textNeed = WordsDatabaseScript.words[randomNum];
-            // int randomNum = rnd.Next(0, WordsDatabaseScript.maxWordsArray);
-            // nextTextNeed = WordsDatabaseScript.words[randomNum];
+            if (WordsDatabaseScript.words[randomNum].Length <= maxSymbols)
+            {
+                textNeed = WordsDatabaseScript.words[randomNum];
+            }
+            else
+            {
+                TextGenerator();
+            }
         }
 
         static void Beep(int frequency, int duration)
