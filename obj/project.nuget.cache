@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "KFawle+UBkf6Yeq3s7teQ0qjMObAKrTz+9Xa/AhkpWcqyE9pZeXq8lnxjdh3zOaTh54PtCaXruGiEI8LVyppew==",
+  "dgSpecHash": "WpzdS+Ncv4FJWzRr+OXnd+Ph5mKIyFvfcCvh0r2S6N9Ciqpy5kQLCIH9sH5sOt7QvRoXheGm/KLPGRoFnLk0Lg==",
   "success": true,
-  "projectFilePath": "G:\\Programming\\C#\\Projects (Visual Studio Code)\\GitHub\\KeyboardTrainerConsole\\KeyboardTrainerConsole.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\dleuiajs\\git\\KeyboardTrainerConsole\\KeyboardTrainerConsole.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\dleuiajs\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.13\\microsoft.netcore.app.ref.6.0.13.nupkg.sha512",
+    "C:\\Users\\dleuiajs\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.13\\microsoft.windowsdesktop.app.ref.6.0.13.nupkg.sha512",
+    "C:\\Users\\dleuiajs\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.13\\microsoft.aspnetcore.app.ref.6.0.13.nupkg.sha512",
+    "C:\\Users\\dleuiajs\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.13\\microsoft.netcore.app.host.win-x64.6.0.13.nupkg.sha512"
+  ],
   "logs": []
 }

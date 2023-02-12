@@ -285,11 +285,41 @@ namespace KeyboardTrainerConsole
                     // nick + " - " + level + " уровень");
                     filesSaves = Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\.game\\saves\\");
                     Console.WriteLine("Топ игроки:");
+                    string[] arrayNick = new string[0];
+                    int[] arrayLevel = new int[0];
+                    string top = "";
                     for (int i = 0; i < filesSaves.Length; i++)
                     {
                         string[] save = File.ReadAllLines(filesSaves[i]);
-                        Console.WriteLine(Path.GetFileName(filesSaves[i]).Replace(".save","") + " - " + save[0] + " level");
+                        string nick = Path.GetFileName(filesSaves[i]).Replace(".save", "");
+                        Array.Resize(ref arrayNick, arrayNick.Length + 1);
+                        Array.Resize(ref arrayLevel, arrayLevel.Length + 1);
+                        //Console.WriteLine(Path.GetFileName(filesSaves[i]).Replace(".save", "") + " - " + save[0] + " level");
+                        arrayNick[i] = nick;
+                        arrayLevel[i] = Convert.ToInt32(save[0]);
                     }
+                    int temp;
+                    string tempString;
+                    for (int i = 0; i < arrayLevel.Length - 1; i++)
+                    {
+                        for (int j = i + 1; j < arrayLevel.Length; j++)
+                        {
+                            if (arrayLevel[i] < arrayLevel[j])
+                            {
+                                temp = arrayLevel[i];
+                                arrayLevel[i] = arrayLevel[j];
+                                arrayLevel[j] = temp;
+                                tempString = arrayNick[i];
+                                arrayNick[i] = arrayNick[j];
+                                arrayNick[j] = tempString;
+                            }
+                        }
+                    }
+                    for (int i = 0; i < arrayLevel.Length; i++)
+                    {
+                        top += arrayNick[i] + " - " + arrayLevel[i] +  " lvl" + "\n";
+                    }
+                    Console.WriteLine(top);
                     EnterText();
                 }
                 else if (textEntered == "/account")

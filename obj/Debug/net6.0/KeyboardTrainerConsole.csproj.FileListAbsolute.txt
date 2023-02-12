@@ -43,3 +43,18 @@ A:\Programming\Visual Studio\C#\GitHub Projects\KeyboardTrainerConsole\obj\Debug
 A:\Programming\Visual Studio\C#\GitHub Projects\KeyboardTrainerConsole\obj\Debug\net6.0\ref\KeyboardTrainerConsole.dll
 A:\Programming\Visual Studio\C#\GitHub Projects\KeyboardTrainerConsole\obj\Debug\net6.0\KeyboardTrainerConsole.pdb
 A:\Programming\Visual Studio\C#\GitHub Projects\KeyboardTrainerConsole\obj\Debug\net6.0\KeyboardTrainerConsole.genruntimeconfig.cache
+C:\Users\dleuiajs\git\KeyboardTrainerConsole\bin\Debug\net6.0\KeyboardTrainerConsole.exe
+C:\Users\dleuiajs\git\KeyboardTrainerConsole\bin\Debug\net6.0\KeyboardTrainerConsole.deps.json
+C:\Users\dleuiajs\git\KeyboardTrainerConsole\bin\Debug\net6.0\KeyboardTrainerConsole.runtimeconfig.json
+C:\Users\dleuiajs\git\KeyboardTrainerConsole\bin\Debug\net6.0\KeyboardTrainerConsole.dll
+C:\Users\dleuiajs\git\KeyboardTrainerConsole\bin\Debug\net6.0\KeyboardTrainerConsole.pdb
+C:\Users\dleuiajs\git\KeyboardTrainerConsole\obj\Debug\net6.0\KeyboardTrainerConsole.csproj.AssemblyReference.cache
+C:\Users\dleuiajs\git\KeyboardTrainerConsole\obj\Debug\net6.0\KeyboardTrainerConsole.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\dleuiajs\git\KeyboardTrainerConsole\obj\Debug\net6.0\KeyboardTrainerConsole.AssemblyInfoInputs.cache
+C:\Users\dleuiajs\git\KeyboardTrainerConsole\obj\Debug\net6.0\KeyboardTrainerConsole.AssemblyInfo.cs
+C:\Users\dleuiajs\git\KeyboardTrainerConsole\obj\Debug\net6.0\KeyboardTrainerConsole.csproj.CoreCompileInputs.cache
+C:\Users\dleuiajs\git\KeyboardTrainerConsole\obj\Debug\net6.0\KeyboardTrainerConsole.dll
+C:\Users\dleuiajs\git\KeyboardTrainerConsole\obj\Debug\net6.0\refint\KeyboardTrainerConsole.dll
+C:\Users\dleuiajs\git\KeyboardTrainerConsole\obj\Debug\net6.0\KeyboardTrainerConsole.pdb
+C:\Users\dleuiajs\git\KeyboardTrainerConsole\obj\Debug\net6.0\KeyboardTrainerConsole.genruntimeconfig.cache
+C:\Users\dleuiajs\git\KeyboardTrainerConsole\obj\Debug\net6.0\ref\KeyboardTrainerConsole.dll
