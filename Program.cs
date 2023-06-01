@@ -210,12 +210,18 @@ namespace KeyboardTrainerConsole
             }
         }
 
+        static void OpenFrame()
+        {
+            Console.WriteLine("==============================");
+        }
+
         static void Commands()
         {
             if (textEntered.StartsWith("/"))
             {
                 if (textEntered == "/help")
                 {
+                    OpenFrame();
                     dontGenerateNextWord = true;
                     Console.WriteLine("Commands:" +
                     "\n/help - list of all commands" +
@@ -228,18 +234,21 @@ namespace KeyboardTrainerConsole
                     "\n/account - change account" +
                     "\n/about - information about the game" +
                     "\n/exit - exit the game");
+                    OpenFrame();
                     EnterText();
                 }
                 else if (textEntered == "/difficulty")
                 {
                     dontGenerateNextWord = true;
                     string difficultyEntered;
+                    OpenFrame();
                     Console.WriteLine("Specify the difficulty:" +
                     "\n1 - Kid (up to 3 characters per word)" +
                     "\n2 - Very easy (up to 5 characters per word)" +
                     "\n3 - Easy (up to 7 characters per word)" +
                     "\n4 - Medium (up to 10 characters per word)" +
                     "\n5 - Normal (unlimited characters per word) - default");
+                    OpenFrame();
                     difficultyEntered = Console.ReadLine();
                     if (difficultyEntered == "1")
                     {
@@ -276,7 +285,15 @@ namespace KeyboardTrainerConsole
                 else if (textEntered == "/about")
                 {
                     dontGenerateNextWord = true;
-                    Console.WriteLine("Developer: dleuiajs \nVersion: 1.000");
+                    OpenFrame();
+                    Console.WriteLine("██╗░░██╗████████╗░█████╗░" +
+                                    "\n██║░██╔╝╚══██╔══╝██╔══██╗" +
+                                    "\n█████═╝░░░░██║░░░██║░░╚═╝" +
+                                    "\n██╔═██╗░░░░██║░░░██║░░██╗" +
+                                    "\n██║░╚██╗░░░██║░░░╚█████╔╝" +
+                                    "\n╚═╝░░╚═╝░░░╚═╝░░░░╚════╝░");
+                    Console.WriteLine("Developer: dleuiajs \nVersion: 1.001");
+                    OpenFrame();
                     EnterText();
                 }
                 else if (textEntered == "/top")
@@ -285,6 +302,7 @@ namespace KeyboardTrainerConsole
                     // Console.WriteLine("Топ игроки:\n" +
                     // nick + " - " + level + " уровень");
                     filesSaves = Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\.game\\saves\\");
+                    OpenFrame();
                     Console.WriteLine("Top players:");
                     string[] arrayNick = new string[0];
                     int[] arrayLevel = new int[0];
@@ -321,6 +339,7 @@ namespace KeyboardTrainerConsole
                         top += arrayNick[i] + " - " + arrayLevel[i] + " lvl" + "\n";
                     }
                     Console.WriteLine(top);
+                    OpenFrame();
                     EnterText();
                 }
                 else if (textEntered == "/account")
@@ -328,13 +347,13 @@ namespace KeyboardTrainerConsole
                     LoginInAccount();
                     EnterText();
                 }
-                else if (textEntered == "/cheat")
-                {
-                    dontGenerateNextWord = true;
-                    exp += expNeed;
-                    LevelCheck();
-                    EnterText();
-                }
+                // else if (textEntered == "/cheat")
+                // {
+                //     dontGenerateNextWord = true;
+                //     exp += expNeed;
+                //     LevelCheck();
+                //     EnterText();
+                // }
                 else if (textEntered == "/language")
                 {
                     dontGenerateNextWord = true;
@@ -351,6 +370,7 @@ namespace KeyboardTrainerConsole
                 else if (textEntered == "/sounds")
                 {
                     dontGenerateNextWord = true;
+                    OpenFrame();
                     Console.WriteLine(
                     "To disable sounds write - /disablesounds" +
                     "\nTo enable sounds write - /enablesounds" +
@@ -359,6 +379,7 @@ namespace KeyboardTrainerConsole
                     "\nTo change the duration of the win sound, write: - /durwin" +
                     "\nTo change the duration of the miss sound, write: - /misswin"
                     );
+                    OpenFrame();
                     EnterText();
                 }
                 else if (textEntered == "/disablesounds")
@@ -497,6 +518,7 @@ namespace KeyboardTrainerConsole
                 {
                     dontGenerateNextWord = true;
                     float winRatio = wins / (wins + misses) * 100f;
+                    OpenFrame();
                     Console.WriteLine("Your game statistics:" +
                     "\nNickname: " + nick +
                     "\nLevel: " + level +
@@ -507,6 +529,7 @@ namespace KeyboardTrainerConsole
                     "\nWins: " + wins +
                     "\nMisses: " + misses +
                     "\nWin ratio: " + Math.Round(winRatio, 2) + "%");
+                    OpenFrame();
                     EnterText();
                 }
 
@@ -528,10 +551,12 @@ namespace KeyboardTrainerConsole
 
         static void ChangeLanguage()
         {
+            OpenFrame();
             Console.WriteLine("Select a language:" +
             "\nenglish" +
             "\nukrainian" +
             "\nrussian");
+            OpenFrame();
             textEntered = Console.ReadLine();
             if (textEntered == "english" || textEntered == "English")
             {
@@ -568,6 +593,7 @@ namespace KeyboardTrainerConsole
         {
             if (changeDictionaryWrited == false)
             {
+                OpenFrame();
                 Console.WriteLine("Select a dictionary:" +
                 "\nnouns" + " (" + nounsLvl + " lvl)" +
                 "\nletters" + " (" + lettersLvl + " lvl)" +
@@ -577,6 +603,7 @@ namespace KeyboardTrainerConsole
                 "\nsurnames" + " (" + surnamesLvl + " lvl)" +
                 "\nall" + " (" + allLvl + " lvl)"
                 );
+                OpenFrame();
             }
             else
             {
