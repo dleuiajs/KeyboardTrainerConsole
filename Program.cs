@@ -212,7 +212,9 @@ namespace KeyboardTrainerConsole
 
         static void OpenFrame()
         {
+            //Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("==============================");
+            //Console.ResetColor();
         }
 
         static void Commands()
@@ -717,7 +719,9 @@ namespace KeyboardTrainerConsole
                 exp -= expNeed;
                 floatExpNeed = Math.Round(expNeed * 1.5f, 0);
                 expNeed = Convert.ToInt32(floatExpNeed);
+                Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine("Level raised! You level is now " + level + "! The next level requires " + (expNeed - exp) + " exp.");
+                Console.ResetColor();
                 SaveGame();
             }
         }
@@ -750,7 +754,9 @@ namespace KeyboardTrainerConsole
             {
                 dontGenerateNextWord = false;
             }
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Enter " + "«" + textNeed + "»");
+            Console.ResetColor();
             textEntered = Console.ReadLine();
             Commands();
             if (textEntered == textNeed)
@@ -760,7 +766,9 @@ namespace KeyboardTrainerConsole
                 enteredCharacters += textEntered.Length;
                 exp += textEntered.Length;
                 LevelCheck();
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Good job! " + "Wins: " + wins + ". Misses: " + misses + ". Characters entered: " + enteredCharacters);
+                Console.ResetColor();
                 Beep(freqwin, durwin);
                 SaveGame();
                 EnterText();
@@ -770,7 +778,9 @@ namespace KeyboardTrainerConsole
                 misses += 1;
                 //enteredCharacters += textEntered.Length;
                 dontGenerateNextWord = true;
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Miss! " + "Wins: " + wins + ". Misses: " + misses + ". Characters entered: " + enteredCharacters);
+                Console.ResetColor();
                 Beep(freqmiss, durmiss);
                 SaveGame();
                 EnterText();

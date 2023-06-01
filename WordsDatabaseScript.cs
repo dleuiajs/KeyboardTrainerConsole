@@ -36,7 +36,9 @@ namespace KeyboardTrainerConsole
         public static void DictionarySetting()
         {
             CheckPath();
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("Selected dictionary - " + "«" + dictionary + "»" + " of the " + language + " language. " + "Number of words: " + maxWordsArray);
+            Console.ResetColor();
         }
     }
 }
