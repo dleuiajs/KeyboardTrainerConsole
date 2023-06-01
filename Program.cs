@@ -57,6 +57,7 @@ namespace KeyboardTrainerConsole
             {
                 LoadGame(); // загружаем игру
             }
+            Console.WriteLine("Welcome, " + nick + "! For help with commands, type /help");
             EnterText();
         }
 
@@ -67,8 +68,8 @@ namespace KeyboardTrainerConsole
 
             Console.WriteLine("Enter your nickname");
             nick = Console.ReadLine();
-            Console.WriteLine("Готово! Ваш ник - " + nick);
-            Console.WriteLine("Хотите ли вы запомнить данный аккаунт для будущего входа? (в любой момент вы сможете сменить аккаунт введя /account) (Y - Yes, N - No)");
+            Console.WriteLine("Done! Your nick is " + nick);
+            Console.WriteLine("Do you want to remember this account for future login? (you can change your account at any time by entering /account) (Y - Yes, N - No)");
             while (!rembAccEnd)
             {
                 textEntered = Console.ReadLine();
@@ -84,7 +85,7 @@ namespace KeyboardTrainerConsole
                 }
                 else
                 {
-                    Console.WriteLine("Неизвестный ответ! Напишите Y (Yes) или N (No)");
+                    Console.WriteLine("Unknown answer! Write Y (Yes) or N (No)");
                 }
             }
             SaveSettings();
@@ -223,9 +224,9 @@ namespace KeyboardTrainerConsole
                     "\n/difficulty - change the difficulty" +
                     "\n/sounds - customize the sounds" +
                     "\n/stats - shows your game statistics" +
-                    "\n/top - топ игроков" +
-                    "\n/account - сменить аккаунт" +
-                    "\n/about - информация про игру" +
+                    "\n/top - top players" +
+                    "\n/account - change account" +
+                    "\n/about - information about the game" +
                     "\n/exit - exit the game");
                     EnterText();
                 }
@@ -233,41 +234,41 @@ namespace KeyboardTrainerConsole
                 {
                     dontGenerateNextWord = true;
                     string difficultyEntered;
-                    Console.WriteLine("Укажите сложность:" +
-                    "\n1 - Ребенок (до 3 символов в слове)" +
-                    "\n2 - Очень легкая (до 5 символов в слове)" +
-                    "\n3 - Легкая (до 7 символов в слове)" +
-                    "\n4 - Средняя (до 10 символов в слове)" +
-                    "\n5 - Обычная (неограниченно символов в слове) - default");
+                    Console.WriteLine("Specify the difficulty:" +
+                    "\n1 - Kid (up to 3 characters per word)" +
+                    "\n2 - Very easy (up to 5 characters per word)" +
+                    "\n3 - Easy (up to 7 characters per word)" +
+                    "\n4 - Medium (up to 10 characters per word)" +
+                    "\n5 - Normal (unlimited characters per word) - default");
                     difficultyEntered = Console.ReadLine();
                     if (difficultyEntered == "1")
                     {
                         maxSymbols = 3;
-                        Console.WriteLine("Установлена сложность - ребенок");
+                        Console.WriteLine("Selected difficulty - Kid");
                     }
                     else if (difficultyEntered == "2")
                     {
                         maxSymbols = 5;
-                        Console.WriteLine("Установлена сложность - очень легкая");
+                        Console.WriteLine("Selected difficulty - Very easy");
                     }
                     else if (difficultyEntered == "3")
                     {
                         maxSymbols = 7;
-                        Console.WriteLine("Установлена сложность - легкая");
+                        Console.WriteLine("Selected difficulty - Easy");
                     }
                     else if (difficultyEntered == "4")
                     {
                         maxSymbols = 10;
-                        Console.WriteLine("Установлена сложность - средняя");
+                        Console.WriteLine("Selected difficulty - Medium");
                     }
                     else if (difficultyEntered == "5")
                     {
                         maxSymbols = 999;
-                        Console.WriteLine("Установлена сложность - обычная");
+                        Console.WriteLine("Selected difficulty - Normal");
                     }
                     else
                     {
-                        Console.WriteLine("Неизвестный ответ! Введите число от 1 до 5.");
+                        Console.WriteLine("Unknown answer! Enter a number from 1 to 5.");
                     }
                     SaveGame();
                     EnterText();
@@ -275,7 +276,7 @@ namespace KeyboardTrainerConsole
                 else if (textEntered == "/about")
                 {
                     dontGenerateNextWord = true;
-                    Console.WriteLine("Разработчик: dleuiajs \nВерсия: 0.000");
+                    Console.WriteLine("Developer: dleuiajs \nVersion: 1.000");
                     EnterText();
                 }
                 else if (textEntered == "/top")
@@ -284,7 +285,7 @@ namespace KeyboardTrainerConsole
                     // Console.WriteLine("Топ игроки:\n" +
                     // nick + " - " + level + " уровень");
                     filesSaves = Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\.game\\saves\\");
-                    Console.WriteLine("Топ игроки:");
+                    Console.WriteLine("Top players:");
                     string[] arrayNick = new string[0];
                     int[] arrayLevel = new int[0];
                     string top = "";
@@ -317,7 +318,7 @@ namespace KeyboardTrainerConsole
                     }
                     for (int i = 0; i < arrayLevel.Length; i++)
                     {
-                        top += arrayNick[i] + " - " + arrayLevel[i] +  " lvl" + "\n";
+                        top += arrayNick[i] + " - " + arrayLevel[i] + " lvl" + "\n";
                     }
                     Console.WriteLine(top);
                     EnterText();

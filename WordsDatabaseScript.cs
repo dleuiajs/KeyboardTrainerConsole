@@ -22,7 +22,7 @@ namespace KeyboardTrainerConsole
             }
             catch (Exception e)
             {
-                Console.WriteLine("К сожалению, данного словаря на языке " + language + " еще нет. Попробуйте с другим языком.");
+                Console.WriteLine("Unfortunately, this dictionary is not yet available in " + language + ". Try with another language.");
                 dictionary = "nouns";
                 // CheckPath();
             }
