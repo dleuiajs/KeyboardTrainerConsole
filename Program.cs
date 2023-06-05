@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using System.IO;
+using System.Diagnostics;
+using System.Threading;
 
 namespace KeyboardTrainerConsole
 {
@@ -27,9 +29,26 @@ namespace KeyboardTrainerConsole
         static int exp; // exp += enteredCharacters с одного слова
         static int expNeed = 100; // сколько нужно exp для аппа уровня
         static int enteredWords;
+        static int enteredWordsWhttErrors;
         static int enteredCharacters;
         static float wins;
-        static float misses;
+        static float errors;
+
+        // cpm wpm
+
+        static int cpm = 0;
+        static int maxCPM = 0;
+
+        static int wpm = 0;
+        static int maxWPM = 0;
+
+        static double averageWordLength = 5.0; // Средняя длина слова (в символах) for english
+
+        static int countAverageCPM = 0;
+        static int sumAverageCPM = 0;
+        static int averageCPM = 0;
+
+        static int averageWPM = 0;
 
         // accounts
         static string nick = "Player"; // ник игрока
@@ -103,7 +122,7 @@ namespace KeyboardTrainerConsole
                 enteredWords = Convert.ToInt32(saveGame[2]);
                 enteredCharacters = Convert.ToInt32(saveGame[3]);
                 wins = Convert.ToInt32(saveGame[4]);
-                misses = Convert.ToInt32(saveGame[5]);
+                errors = Convert.ToInt32(saveGame[5]);
                 WordsDatabaseScript.language = saveGame[6];
                 if (WordsDatabaseScript.language == "none")
                 {
@@ -117,14 +136,49 @@ namespace KeyboardTrainerConsole
                 WordsDatabaseScript.DictionarySetting();
                 expNeed = Convert.ToInt32(saveGame[8]);
                 maxSymbols = Convert.ToInt32(saveGame[9]);
+                enteredWordsWhttErrors = Convert.ToInt32(saveGame[10]);
+                maxCPM = Convert.ToInt32(saveGame[11]);
+                averageCPM = Convert.ToInt32(saveGame[12]);
+                maxWPM = Convert.ToInt32(Math.Floor(maxCPM / averageWordLength));
+                averageWPM = Convert.ToInt32(Math.Floor(averageCPM / averageWordLength));
+                countAverageCPM = Convert.ToInt32(saveGame[13]);
+                sumAverageCPM = Convert.ToInt32(saveGame[14]);
+                for (int i = 0; i < Achievements.text.Length; i++)
+                {
+                    if (saveGame[i + 15] == "0")
+                    {
+                        Achievements.completedAch[i] = false;
+                    }
+                    else if (saveGame[i + 15] == "1")
+                    {
+                        Achievements.completedAch[i] = true;
+                    }
+                }
             }
             catch (Exception e)
             {
+                //Console.WriteLine("Exception: " + e.Message);
                 //Console.WriteLine("Ошибка! Создаем файл сохранения заново.");
                 try
                 {
                     File.WriteAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\.game\\saves\\" + nick + ".save",
-                    0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + "none" + "\n" + "nouns" + "\n" + 100 + "\n" + 999);
+                    0 + "\n" + // 0
+                    0 + "\n" + // 1
+                    0 + "\n" + // 2
+                    0 + "\n" + // 3
+                    0 + "\n" + // 4
+                    0 + "\n" + // 5
+                    "none" + "\n" +  // 6
+                    "nouns" + "\n" +  // 7
+                    100 + "\n" +  // 8
+                    999 + "\n" +  // 9
+                    0 + "\n" + // 10
+                    0 + "\n" + // 11
+                    0 + "\n" + // 12
+                    0 + "\n" + // 13
+                    0 + "\n" + // 14
+                    0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" + 0 + "\n" //15 - 43 (achts)
+                    ); // !!! после добавления новой переменной в сохранение обязательно добавить и сюда
                 }
                 catch (Exception e2)
                 {
@@ -180,7 +234,34 @@ namespace KeyboardTrainerConsole
             {
                 // перезаписываем данные
                 File.WriteAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\.game\\saves\\" + nick + ".save",
-                level + "\n" + exp + "\n" + enteredWords + "\n" + enteredCharacters + "\n" + wins + "\n" + misses + "\n" + WordsDatabaseScript.language + "\n" + WordsDatabaseScript.dictionary + "\n" + expNeed + "\n" + maxSymbols);
+                level + "\n" + // 0
+                exp + "\n" +  // 1
+                enteredWords + "\n" +  // 2
+                enteredCharacters + "\n" +  // 3
+                wins + "\n" +  // 4
+                errors + "\n" +  // 5
+                WordsDatabaseScript.language + "\n" +  // 6
+                WordsDatabaseScript.dictionary + "\n" +  // 7
+                expNeed + "\n" +  // 8
+                maxSymbols + "\n" + // 9
+                enteredWordsWhttErrors + "\n" + // 10
+                maxCPM + "\n" + // 11
+                averageCPM + "\n" + // 12
+                countAverageCPM + "\n" + // 13
+                sumAverageCPM + "\n" // 14
+                );
+                for (int i = 0; i < Achievements.text.Length; i++)
+                {
+                    if (!Achievements.completedAch[i])
+                    {
+                        File.AppendAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\.game\\saves\\" + nick + ".save", 0 + "\n");
+                    }
+                    else
+                    {
+                        File.AppendAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\.game\\saves\\" + nick + ".save", 1 + "\n");
+                    }
+
+                }
             }
             catch (Exception e)
             {
@@ -232,6 +313,7 @@ namespace KeyboardTrainerConsole
                     "\n/difficulty - change the difficulty" +
                     "\n/sounds - customize the sounds" +
                     "\n/stats - shows your game statistics" +
+                    "\n/achts - shows completed and uncompleted achievements" +
                     "\n/top - top players" +
                     "\n/account - change account" +
                     "\n/about - information about the game" +
@@ -239,11 +321,37 @@ namespace KeyboardTrainerConsole
                     OpenFrame();
                     EnterText();
                 }
-                else if (textEntered == "/difficulty")
+                else if (textEntered == "/achts")
                 {
                     dontGenerateNextWord = true;
+                    OpenFrame();
+                    for (int i = 0; i < Achievements.text.Length; i++)
+                    {
+                        if (Achievements.completedAch[i])
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkGray;
+                            Console.WriteLine((i + 1) + ". " + Achievements.text[i] + " - " + Achievements.exp[i] + " EXP [Completed]");
+                            Console.ResetColor();
+                        }
+                        if (!Achievements.completedAch[i])
+                        {
+                            //Console.ForegroundColor = ConsoleColor.DarkGray;
+                            Console.WriteLine((i + 1) + ". " + Achievements.text[i] + " - " + Achievements.exp[i] + " EXP [Not completed]");
+                            //Console.ResetColor();
+                        }
+                    }
+                    OpenFrame();
+                    EnterText();
+                }
+                else if (textEntered == "/difficulty")
+                {
                     string difficultyEntered;
                     OpenFrame();
+
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    Console.WriteLine("Please note that if the difficulty is not \"Normal\", then the statistics will not be updated.");
+                    Console.ResetColor();
+
                     Console.WriteLine("Specify the difficulty:" +
                     "\n1 - Kid (up to 3 characters per word)" +
                     "\n2 - Very easy (up to 5 characters per word)" +
@@ -256,6 +364,8 @@ namespace KeyboardTrainerConsole
                     {
                         maxSymbols = 3;
                         Console.WriteLine("Selected difficulty - Kid");
+                        Achievements.completedAch[24] = true;
+                        AchievementsCheck(24);
                     }
                     else if (difficultyEntered == "2")
                     {
@@ -280,6 +390,7 @@ namespace KeyboardTrainerConsole
                     else
                     {
                         Console.WriteLine("Unknown answer! Enter a number from 1 to 5.");
+                        dontGenerateNextWord = true;
                     }
                     SaveGame();
                     EnterText();
@@ -294,8 +405,10 @@ namespace KeyboardTrainerConsole
                                     "\n██╔═██╗░░░░██║░░░██║░░██╗" +
                                     "\n██║░╚██╗░░░██║░░░╚█████╔╝" +
                                     "\n╚═╝░░╚═╝░░░╚═╝░░░░╚════╝░");
-                    Console.WriteLine("Developer: dleuiajs \nVersion: 1.001");
+                    Console.WriteLine("Developer: dleuiajs \nVersion: 1.003");
                     OpenFrame();
+                    Achievements.completedAch[27] = true;
+                    AchievementsCheck(27);
                     EnterText();
                 }
                 else if (textEntered == "/top")
@@ -414,6 +527,8 @@ namespace KeyboardTrainerConsole
                             freqwin = num;
                             Console.WriteLine("Now the frequency of the win sound is " + freqwin + " Hz.");
                             SaveSettings();
+                            Achievements.completedAch[26] = true;
+                            AchievementsCheck(26);
                             EnterText();
                         }
                         else
@@ -443,6 +558,8 @@ namespace KeyboardTrainerConsole
                             freqmiss = num;
                             Console.WriteLine("Now the frequency of the win sound is " + freqmiss + " Hz.");
                             SaveSettings();
+                            Achievements.completedAch[26] = true;
+                            AchievementsCheck(26);
                             EnterText();
                         }
                         else
@@ -519,7 +636,7 @@ namespace KeyboardTrainerConsole
                 else if (textEntered == "/stats")
                 {
                     dontGenerateNextWord = true;
-                    float winRatio = wins / (wins + misses) * 100f;
+                    float winRatio = wins / (wins + errors) * 100f;
                     OpenFrame();
                     Console.WriteLine("Your game statistics:" +
                     "\nNickname: " + nick +
@@ -527,10 +644,16 @@ namespace KeyboardTrainerConsole
                     "\nExp: " + exp +
                     "\nNeed exp for the next level: " + (expNeed - exp) +
                     "\nWords entered: " + enteredWords +
+                    "\nWords enteres without errors in a row: " + enteredWordsWhttErrors +
                     "\nCharacters entered: " + enteredCharacters +
                     "\nWins: " + wins +
-                    "\nMisses: " + misses +
-                    "\nWin ratio: " + Math.Round(winRatio, 2) + "%");
+                    "\nErrors: " + errors +
+                    "\nWin ratio: " + Math.Round(winRatio, 2) + "%" +
+                    "\nMax WPM: " + maxWPM +
+                    "\nMax CPM: " + maxCPM +
+                    "\nAverage WPM: " + averageWPM +
+                    "\nAverage CPM: " + averageCPM
+                    );
                     OpenFrame();
                     EnterText();
                 }
@@ -710,6 +833,17 @@ namespace KeyboardTrainerConsole
             SaveGame();
         }
 
+        static void Checking()
+        {
+            LevelCheck();
+            AchWordsCheck();
+            AchLettersInWordsCheck();
+            AchWordsWhttErrorsCheck();
+            AchWPMCheck();
+            AchCharactersCheck();
+            AchLanguagesCheck();
+        }
+
         static void LevelCheck()
         {
             double floatExpNeed;
@@ -725,6 +859,108 @@ namespace KeyboardTrainerConsole
                 SaveGame();
             }
         }
+
+
+        static void AchievementsCheck(int achID)
+        {
+            if (Achievements.completedAch[achID])
+            {
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                Console.WriteLine("You have completed the achievement \"" + Achievements.text[achID] + "\"!");
+                Console.ResetColor();
+                exp += Achievements.exp[achID];
+                LevelCheck();
+            }
+        }
+
+        // ----------------- Achievements:
+
+        static int achWordsID = 0;
+        static void AchWordsCheck()
+        {
+            if (achWordsID <= 4)
+            {
+                if (enteredWords >= Achievements.need[achWordsID] && !Achievements.completedAch[achWordsID])
+                {
+                    Achievements.completedAch[achWordsID] = true;
+                    AchievementsCheck(achWordsID);
+                    achWordsID++;
+                }
+            }
+        }
+
+        static int achLettersInWordsID = 5;
+        static void AchLettersInWordsCheck()
+        {
+            if (achLettersInWordsID <= 7)
+            {
+                if (textEntered.Length >= Achievements.need[achLettersInWordsID] && !Achievements.completedAch[achLettersInWordsID])
+                {
+                    Achievements.completedAch[achLettersInWordsID] = true;
+                    AchievementsCheck(achLettersInWordsID);
+                    achLettersInWordsID++;
+                }
+            }
+        }
+
+        static int achWordsWhttErrorsID = 8;
+        static void AchWordsWhttErrorsCheck()
+        {
+            if (achWordsWhttErrorsID <= 11)
+            {
+                if (enteredWordsWhttErrors >= Achievements.need[achWordsWhttErrorsID] && !Achievements.completedAch[achWordsWhttErrorsID])
+                {
+                    Achievements.completedAch[achWordsWhttErrorsID] = true;
+                    AchievementsCheck(achWordsWhttErrorsID);
+                    achWordsWhttErrorsID++;
+                }
+            }
+        }
+
+        static int achWPMID = 12;
+        static void AchWPMCheck()
+        {
+            if (achWPMID <= 16)
+            {
+                if (averageWPM >= Achievements.need[achWPMID] && !Achievements.completedAch[achWPMID])
+                {
+                    Achievements.completedAch[achWPMID] = true;
+                    AchievementsCheck(achWPMID);
+                    achWPMID++;
+                }
+            }
+        }
+
+        static int achCharactersID = 17;
+        static void AchCharactersCheck()
+        {
+            if (achCharactersID <= 20)
+            {
+                if (enteredCharacters >= Achievements.need[achCharactersID] && !Achievements.completedAch[achCharactersID])
+                {
+                    Achievements.completedAch[achCharactersID] = true;
+                    AchievementsCheck(achCharactersID);
+                    achCharactersID++;
+                }
+            }
+        }
+
+        static int languagesUsed = 0;
+        static int achLanguagesID = 21;
+        static void AchLanguagesCheck() // сделать когда добавлю побольше языков
+        {
+            if (achLanguagesID <= 23)
+            {
+                if (languagesUsed >= Achievements.need[achLanguagesID] && !Achievements.completedAch[achLanguagesID])
+                {
+                    Achievements.completedAch[achLanguagesID] = true;
+                    AchievementsCheck(achLanguagesID);
+                    achLanguagesID++;
+                }
+            }
+        }
+
+        // __________________
 
         static void TextGenerator()
         {
@@ -746,6 +982,15 @@ namespace KeyboardTrainerConsole
 
         static void EnterText()
         {
+            System.Text.Encoding tempOutputEncoding = Console.OutputEncoding;
+            System.Text.Encoding tempInputEncoding = Console.InputEncoding;
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.InputEncoding = System.Text.Encoding.UTF8;
+
+            bool stopTimer = false;
+            Stopwatch stopwatch = new Stopwatch();
+            Thread timerThread = new Thread(() => TimerThread(stopwatch, ref stopTimer));
+
             if (!dontGenerateNextWord)
             {
                 TextGenerator();
@@ -754,36 +999,85 @@ namespace KeyboardTrainerConsole
             {
                 dontGenerateNextWord = false;
             }
-            Console.ForegroundColor = ConsoleColor.Yellow;
+
+            Console.ForegroundColor = ConsoleColor.Yellow; ;
             Console.WriteLine("Enter " + "«" + textNeed + "»");
             Console.ResetColor();
-            textEntered = Console.ReadLine();
+            ConsoleKeyInfo keyInfo = Console.ReadKey();
+
+            timerThread.Start();
+
+            Console.OutputEncoding = tempOutputEncoding;
+            Console.InputEncoding = tempInputEncoding;
+
+            string textEnteredBefore = Console.ReadLine();
+
+            textEntered = keyInfo.KeyChar.ToString() + textEnteredBefore;
+
+            stopTimer = true; // Устанавливаем флаг, чтобы остановить поток
+            timerThread.Join(); // Дожидаемся завершения потока
+
+
             Commands();
             if (textEntered == textNeed)
             {
-                wins += 1;
-                enteredWords += 1;
-                enteredCharacters += textEntered.Length;
-                exp += textEntered.Length;
-                LevelCheck();
+                double elapsedSeconds = stopwatch.ElapsedMilliseconds / 1000.0;
+                int cpm = Convert.ToInt32(Math.Floor(textEntered.Length / elapsedSeconds * 60.0));
+                int wpm = Convert.ToInt32(Math.Floor(cpm / averageWordLength));
+                if (maxSymbols == 999)
+                {
+                    wins += 1;
+                    enteredWords += 1;
+                    enteredWordsWhttErrors += 1;
+                    enteredCharacters += textEntered.Length;
+                    exp += textEntered.Length;
+
+                    if (cpm > maxCPM)
+                    {
+                        maxCPM = cpm;
+                        maxWPM = wpm;
+                    }
+                    countAverageCPM++;
+                    sumAverageCPM += cpm;
+                    averageCPM = sumAverageCPM / countAverageCPM;
+                    averageWPM = Convert.ToInt32(Math.Floor(averageCPM / averageWordLength));
+
+                    Checking();
+                }
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Good job! " + "Wins: " + wins + ". Misses: " + misses + ". Characters entered: " + enteredCharacters);
+                Console.WriteLine("Good job! " + "Wins: " + wins + ". Errors: " + errors + ". Characters entered: " + enteredCharacters + ". WPM: " + wpm + ". CPM: " + cpm);
+
+                Console.WriteLine("Average WPM: " + averageWPM);
+                Console.WriteLine("Average CPM: " + averageCPM);
+
                 Console.ResetColor();
                 Beep(freqwin, durwin);
-                SaveGame();
-                EnterText();
             }
             else
             {
-                misses += 1;
-                //enteredCharacters += textEntered.Length;
+                if (maxSymbols == 999)
+                {
+                    enteredWordsWhttErrors = 0;
+                    errors += 1;
+                }
                 dontGenerateNextWord = true;
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Miss! " + "Wins: " + wins + ". Misses: " + misses + ". Characters entered: " + enteredCharacters);
+                Console.WriteLine("Miss! " + "Wins: " + wins + ". Errors: " + errors + ". Characters entered: " + enteredCharacters);
                 Console.ResetColor();
                 Beep(freqmiss, durmiss);
-                SaveGame();
-                EnterText();
+            }
+            SaveGame();
+            EnterText();
+        }
+
+
+        static void TimerThread(Stopwatch stopwatch, ref bool stopTimer)
+        {
+            stopwatch.Start();
+
+            while (!stopTimer)
+            {
+                TimeSpan elapsed = stopwatch.Elapsed;
             }
         }
     }
