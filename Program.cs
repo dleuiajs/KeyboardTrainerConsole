@@ -977,6 +977,12 @@ namespace KeyboardTrainerConsole
 
         static void Beep(int frequency, int duration)
         {
+            Thread beepThread = new Thread(() => BeepThread(frequency, duration));
+            beepThread.Start();
+        }
+
+        static void BeepThread(int frequency, int duration)
+        {
             if (enabledSounds) Console.Beep(frequency, duration);
         }
 
