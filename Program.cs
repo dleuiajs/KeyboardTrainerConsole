@@ -157,8 +157,6 @@ namespace KeyboardTrainerConsole
             }
             catch (Exception e)
             {
-                //Console.WriteLine("Exception: " + e.Message);
-                //Console.WriteLine("Ошибка! Создаем файл сохранения заново.");
                 try
                 {
                     File.WriteAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\.game\\saves\\" + nick + ".save",
@@ -186,13 +184,11 @@ namespace KeyboardTrainerConsole
                 }
                 finally
                 {
-                    //Console.WriteLine("Файл сохранения успешно создан!");
                     LoadGame();
                 }
             }
             finally
             {
-                //Console.WriteLine("Игра успешно загружена!");
             }
         }
 
@@ -219,12 +215,10 @@ namespace KeyboardTrainerConsole
             }
             catch (Exception e)
             {
-                //Console.WriteLine("Ошибка! Создаем файл настроек заново.");
                 SaveSettings();
             }
             finally
             {
-                //Console.WriteLine("Настройки успешно загружены!");
             }
         }
 
@@ -269,7 +263,6 @@ namespace KeyboardTrainerConsole
             }
             finally
             {
-                //Console.WriteLine("Игра успешно сохранена!");
             }
         }
 
@@ -287,15 +280,19 @@ namespace KeyboardTrainerConsole
             }
             finally
             {
-                //Console.WriteLine("Настройки успешно сохранены!");
             }
         }
 
         static void OpenFrame()
         {
-            //Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("==============================");
-            //Console.ResetColor();
+        }
+
+        static void ConsoleWriteLineColor(string text, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(text);
+            Console.ResetColor();
         }
 
         static void Commands()
@@ -348,9 +345,7 @@ namespace KeyboardTrainerConsole
                     string difficultyEntered;
                     OpenFrame();
 
-                    Console.ForegroundColor = ConsoleColor.DarkRed;
-                    Console.WriteLine("Please note that if the difficulty is not \"Normal\", then the statistics will not be updated.");
-                    Console.ResetColor();
+                    ConsoleWriteLineColor("Please note that if the difficulty is not \"Normal\", then the statistics will not be updated.", ConsoleColor.DarkRed);
 
                     Console.WriteLine("Specify the difficulty:" +
                     "\n1 - Kid (up to 3 characters per word)" +
@@ -363,33 +358,33 @@ namespace KeyboardTrainerConsole
                     if (difficultyEntered == "1")
                     {
                         maxSymbols = 3;
-                        Console.WriteLine("Selected difficulty - Kid");
+                        ConsoleWriteLineColor("Selected difficulty - Kid", ConsoleColor.Cyan);
                         Achievements.completedAch[24] = true;
                         AchievementsCheck(24);
                     }
                     else if (difficultyEntered == "2")
                     {
                         maxSymbols = 5;
-                        Console.WriteLine("Selected difficulty - Very easy");
+                        ConsoleWriteLineColor("Selected difficulty - Very easy", ConsoleColor.Cyan);
                     }
                     else if (difficultyEntered == "3")
                     {
                         maxSymbols = 7;
-                        Console.WriteLine("Selected difficulty - Easy");
+                        ConsoleWriteLineColor("Selected difficulty - Easy", ConsoleColor.Cyan);
                     }
                     else if (difficultyEntered == "4")
                     {
                         maxSymbols = 10;
-                        Console.WriteLine("Selected difficulty - Medium");
+                        ConsoleWriteLineColor("Selected difficulty - Medium", ConsoleColor.Cyan);
                     }
                     else if (difficultyEntered == "5")
                     {
                         maxSymbols = 999;
-                        Console.WriteLine("Selected difficulty - Normal");
+                        ConsoleWriteLineColor("Selected difficulty - Normal", ConsoleColor.Cyan);
                     }
                     else
                     {
-                        Console.WriteLine("Unknown answer! Enter a number from 1 to 5.");
+                        ConsoleWriteLineColor("Unknown answer! Enter a number from 1 to 5.", ConsoleColor.Red);
                         dontGenerateNextWord = true;
                     }
                     SaveGame();
@@ -405,7 +400,7 @@ namespace KeyboardTrainerConsole
                                     "\n██╔═██╗░░░░██║░░░██║░░██╗" +
                                     "\n██║░╚██╗░░░██║░░░╚█████╔╝" +
                                     "\n╚═╝░░╚═╝░░░╚═╝░░░░╚════╝░");
-                    Console.WriteLine("Developer: dleuiajs \nVersion: 1.003");
+                    Console.WriteLine("Developer: dleuiajs \nVersion: 1.005");
                     OpenFrame();
                     Achievements.completedAch[27] = true;
                     AchievementsCheck(27);
@@ -414,8 +409,6 @@ namespace KeyboardTrainerConsole
                 else if (textEntered == "/top")
                 {
                     dontGenerateNextWord = true;
-                    // Console.WriteLine("Топ игроки:\n" +
-                    // nick + " - " + level + " уровень");
                     filesSaves = Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\.game\\saves\\");
                     OpenFrame();
                     Console.WriteLine("Top players:");
@@ -428,7 +421,6 @@ namespace KeyboardTrainerConsole
                         string nick = Path.GetFileName(filesSaves[i]).Replace(".save", "");
                         Array.Resize(ref arrayNick, arrayNick.Length + 1);
                         Array.Resize(ref arrayLevel, arrayLevel.Length + 1);
-                        //Console.WriteLine(Path.GetFileName(filesSaves[i]).Replace(".save", "") + " - " + save[0] + " level");
                         arrayNick[i] = nick;
                         arrayLevel[i] = Convert.ToInt32(save[0]);
                     }
@@ -473,7 +465,7 @@ namespace KeyboardTrainerConsole
                 {
                     dontGenerateNextWord = true;
                     ChangeLanguage();
-                    Console.WriteLine("Selected language - " + WordsDatabaseScript.language + ", dictionary - " + "«" + WordsDatabaseScript.dictionary + "». " + "Number of words: " + WordsDatabaseScript.maxWordsArray);
+                    ConsoleWriteLineColor("Selected language - " + WordsDatabaseScript.language + ", dictionary - " + "«" + WordsDatabaseScript.dictionary + "». " + "Number of words: " + WordsDatabaseScript.maxWordsArray, ConsoleColor.Cyan);
                     EnterText();
                 }
                 else if (textEntered == "/dictionary")
@@ -501,7 +493,7 @@ namespace KeyboardTrainerConsole
                 {
                     dontGenerateNextWord = true;
                     enabledSounds = false;
-                    Console.WriteLine("Sounds are now disabled.");
+                    ConsoleWriteLineColor("Sounds are now disabled.", ConsoleColor.Cyan);
                     SaveSettings();
                     EnterText();
                 }
@@ -509,13 +501,13 @@ namespace KeyboardTrainerConsole
                 {
                     dontGenerateNextWord = true;
                     enabledSounds = true;
-                    Console.WriteLine("Sounds are now enabled.");
+                    ConsoleWriteLineColor("Sounds are now enabled.", ConsoleColor.Cyan);
                     SaveSettings();
                     EnterText();
                 }
                 else if (textEntered == "/freqwin")
                 {
-                    Console.WriteLine("Enter frequency in Hz from 37 to 32767 (default 200)");
+                    ConsoleWriteLineColor("Enter frequency in Hz from 37 to 32767 (default 200)", ConsoleColor.White);
                     dontGenerateNextWord = true;
                     int num;
                     textEntered = Console.ReadLine();
@@ -525,7 +517,7 @@ namespace KeyboardTrainerConsole
                         if (num >= 37 && num <= 32767)
                         {
                             freqwin = num;
-                            Console.WriteLine("Now the frequency of the win sound is " + freqwin + " Hz.");
+                            ConsoleWriteLineColor("Now the frequency of the win sound is " + freqwin + " Hz.", ConsoleColor.Cyan);
                             SaveSettings();
                             Achievements.completedAch[26] = true;
                             AchievementsCheck(26);
@@ -533,20 +525,20 @@ namespace KeyboardTrainerConsole
                         }
                         else
                         {
-                            Console.WriteLine("The frequency cannot be less than 37 or more than 32767 hertz.");
+                            ConsoleWriteLineColor("The frequency cannot be less than 37 or more than 32767 hertz.", ConsoleColor.Red);
                             EnterText();
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Enter a number!");
+                        ConsoleWriteLineColor("Enter a number!", ConsoleColor.Red);
                         EnterText();
                     }
                     EnterText();
                 }
                 else if (textEntered == "/freqmiss")
                 {
-                    Console.WriteLine("Enter frequency in Hz from 37 to 32767 (default 100)");
+                    ConsoleWriteLineColor("Enter frequency in Hz from 37 to 32767 (default 100)", ConsoleColor.White);
                     dontGenerateNextWord = true;
                     int num;
                     textEntered = Console.ReadLine();
@@ -556,7 +548,7 @@ namespace KeyboardTrainerConsole
                         if (num >= 37 && num <= 32767)
                         {
                             freqmiss = num;
-                            Console.WriteLine("Now the frequency of the win sound is " + freqmiss + " Hz.");
+                            ConsoleWriteLineColor("Now the frequency of the win sound is " + freqmiss + " Hz.", ConsoleColor.Cyan);
                             SaveSettings();
                             Achievements.completedAch[26] = true;
                             AchievementsCheck(26);
@@ -564,20 +556,20 @@ namespace KeyboardTrainerConsole
                         }
                         else
                         {
-                            Console.WriteLine("The frequency cannot be less than 37 or more than 32767 hertz.");
+                            ConsoleWriteLineColor("The frequency cannot be less than 37 or more than 32767 hertz.", ConsoleColor.Red);
                             EnterText();
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Enter a number!");
+                        ConsoleWriteLineColor("Enter a number!", ConsoleColor.Red);
                         EnterText();
                     }
                     EnterText();
                 }
                 else if (textEntered == "/durwin")
                 {
-                    Console.WriteLine("Enter frequency in ms from 1 to 10000 (default 250)");
+                    ConsoleWriteLineColor("Enter frequency in ms from 1 to 10000 (default 250)", ConsoleColor.White);
                     dontGenerateNextWord = true;
                     int num;
                     textEntered = Console.ReadLine();
@@ -587,26 +579,26 @@ namespace KeyboardTrainerConsole
                         if (num > 0 && num < 10000)
                         {
                             durwin = num;
-                            Console.WriteLine("Now the duration of the win sound is " + durwin + " ms.");
+                            ConsoleWriteLineColor("Now the duration of the win sound is " + durwin + " ms.", ConsoleColor.Cyan);
                             SaveSettings();
                             EnterText();
                         }
                         else
                         {
-                            Console.WriteLine("The sound duration cannot be less than 0 or more than 10000 ms.");
+                            ConsoleWriteLineColor("The sound duration cannot be less than 0 or more than 10000 ms.", ConsoleColor.Red);
                             EnterText();
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Enter a number!");
+                        ConsoleWriteLineColor("Enter a number!", ConsoleColor.Red);
                         EnterText();
                     }
                     EnterText();
                 }
                 else if (textEntered == "/durmiss")
                 {
-                    Console.WriteLine("Enter frequency in ms from 1 to 10000 (default 250)");
+                    ConsoleWriteLineColor("Enter frequency in ms from 1 to 10000 (default 250)", ConsoleColor.White);
                     dontGenerateNextWord = true;
                     int num;
                     textEntered = Console.ReadLine();
@@ -616,19 +608,19 @@ namespace KeyboardTrainerConsole
                         if (num > 0 && num < 10000)
                         {
                             durmiss = num;
-                            Console.WriteLine("Now the duration of the miss sound is " + durmiss + " ms.");
+                            ConsoleWriteLineColor("Now the duration of the miss sound is " + durmiss + " ms.", ConsoleColor.Cyan);
                             SaveSettings();
                             EnterText();
                         }
                         else
                         {
-                            Console.WriteLine("The sound duration cannot be less than 0 or more than 10000 ms.");
+                            ConsoleWriteLineColor("The sound duration cannot be less than 0 or more than 10000 ms.", ConsoleColor.Red);
                             EnterText();
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Enter a number!");
+                        ConsoleWriteLineColor("Enter a number!", ConsoleColor.Red);
                         EnterText();
                     }
                     EnterText();
@@ -661,14 +653,14 @@ namespace KeyboardTrainerConsole
                 else if (textEntered == "/exit")
                 {
                     dontGenerateNextWord = true;
-                    Console.WriteLine("Goodbye!");
+                    ConsoleWriteLineColor("Goodbye!", ConsoleColor.Cyan);
                     Environment.Exit(0);
                     EnterText();
                 }
                 else if (textEntered.StartsWith("/"))
                 {
                     dontGenerateNextWord = true;
-                    Console.WriteLine("Unknown сommand!");
+                    ConsoleWriteLineColor("Unknown сommand!", ConsoleColor.Red);
                     EnterText();
                 }
             }
@@ -700,7 +692,7 @@ namespace KeyboardTrainerConsole
             }
             else
             {
-                Console.WriteLine("Unknown language!");
+                ConsoleWriteLineColor("Unknown language!", ConsoleColor.Red);
                 ChangeLanguage();
             }
             SaveGame();
@@ -749,7 +741,7 @@ namespace KeyboardTrainerConsole
                 }
                 else
                 {
-                    Console.WriteLine("For the dictionary «letters» you need level " + lettersLvl + "!");
+                    ConsoleWriteLineColor("For the dictionary «letters» you need level " + lettersLvl + "!", ConsoleColor.Red);
                     changeDictionaryWrited = true;
                     ChangeDictionary();
                 }
@@ -763,7 +755,7 @@ namespace KeyboardTrainerConsole
                 }
                 else
                 {
-                    Console.WriteLine("For the dictionary «symbols» you need level " + symbolsLvl + "!");
+                    ConsoleWriteLineColor("For the dictionary «symbols» you need level " + symbolsLvl + "!", ConsoleColor.Red);
                     changeDictionaryWrited = true;
                     ChangeDictionary();
                 }
@@ -777,7 +769,7 @@ namespace KeyboardTrainerConsole
                 }
                 else
                 {
-                    Console.WriteLine("For the dictionary «adjectives» you need level " + adjectivesLvl + "!");
+                    ConsoleWriteLineColor("For the dictionary «adjectives» you need level " + adjectivesLvl + "!", ConsoleColor.Red);
                     changeDictionaryWrited = true;
                     ChangeDictionary();
                 }
@@ -791,7 +783,7 @@ namespace KeyboardTrainerConsole
                 }
                 else
                 {
-                    Console.WriteLine("For the dictionary «verbs» you need level " + verbsLvl + "!");
+                    ConsoleWriteLineColor("For the dictionary «verbs» you need level " + verbsLvl + "!", ConsoleColor.Red);
                     changeDictionaryWrited = true;
                     ChangeDictionary();
                 }
@@ -805,7 +797,7 @@ namespace KeyboardTrainerConsole
                 }
                 else
                 {
-                    Console.WriteLine("For the dictionary «surnames» you need level " + surnamesLvl + "!");
+                    ConsoleWriteLineColor("For the dictionary «surnames» you need level " + surnamesLvl + "!", ConsoleColor.Red);
                     changeDictionaryWrited = true;
                     ChangeDictionary();
                 }
@@ -819,14 +811,14 @@ namespace KeyboardTrainerConsole
                 }
                 else
                 {
-                    Console.WriteLine("For the dictionary «all» you need level " + allLvl + "!");
+                    ConsoleWriteLineColor("For the dictionary «all» you need level " + allLvl + "!", ConsoleColor.Red);
                     changeDictionaryWrited = true;
                     ChangeDictionary();
                 }
             }
             else
             {
-                Console.WriteLine("Unknown dictionary!");
+                ConsoleWriteLineColor("Unknown dictionary!", ConsoleColor.Red);
                 changeDictionaryWrited = true;
                 ChangeDictionary();
             }
@@ -853,9 +845,7 @@ namespace KeyboardTrainerConsole
                 exp -= expNeed;
                 floatExpNeed = Math.Round(expNeed * 1.5f, 0);
                 expNeed = Convert.ToInt32(floatExpNeed);
-                Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.WriteLine("Level raised! You level is now " + level + "! The next level requires " + (expNeed - exp) + " exp.");
-                Console.ResetColor();
+                ConsoleWriteLineColor("Level raised! You level is now " + level + "! The next level requires " + (expNeed - exp) + " exp.", ConsoleColor.Magenta);
                 SaveGame();
             }
         }
@@ -865,9 +855,7 @@ namespace KeyboardTrainerConsole
         {
             if (Achievements.completedAch[achID])
             {
-                Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                Console.WriteLine("You have completed the achievement \"" + Achievements.text[achID] + "\"!");
-                Console.ResetColor();
+                ConsoleWriteLineColor("You have completed the achievement \"" + Achievements.text[achID] + "\"!", ConsoleColor.DarkMagenta);
                 exp += Achievements.exp[achID];
                 LevelCheck();
             }
@@ -1005,10 +993,7 @@ namespace KeyboardTrainerConsole
             {
                 dontGenerateNextWord = false;
             }
-
-            Console.ForegroundColor = ConsoleColor.Yellow; ;
-            Console.WriteLine("Enter " + "«" + textNeed + "»");
-            Console.ResetColor();
+            ConsoleWriteLineColor("Enter " + "«" + textNeed + "»", ConsoleColor.Yellow);
             ConsoleKeyInfo keyInfo = Console.ReadKey();
 
             timerThread.Start();
@@ -1050,13 +1035,7 @@ namespace KeyboardTrainerConsole
 
                     Checking();
                 }
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Good job! " + "Wins: " + wins + ". Errors: " + errors + ". Characters entered: " + enteredCharacters + ". WPM: " + wpm + ". CPM: " + cpm);
-
-                Console.WriteLine("Average WPM: " + averageWPM);
-                Console.WriteLine("Average CPM: " + averageCPM);
-
-                Console.ResetColor();
+                ConsoleWriteLineColor("Good job! " + "Wins: " + wins + ". Errors: " + errors + ". Characters entered: " + enteredCharacters + ". WPM: " + wpm, ConsoleColor.Green);
                 Beep(freqwin, durwin);
             }
             else
@@ -1067,9 +1046,7 @@ namespace KeyboardTrainerConsole
                     errors += 1;
                 }
                 dontGenerateNextWord = true;
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Miss! " + "Wins: " + wins + ". Errors: " + errors + ". Characters entered: " + enteredCharacters);
-                Console.ResetColor();
+                ConsoleWriteLineColor("Miss! " + "Wins: " + wins + ". Errors: " + errors + ". Characters entered: " + enteredCharacters, ConsoleColor.Red);
                 Beep(freqmiss, durmiss);
             }
             SaveGame();
