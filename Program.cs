@@ -443,9 +443,8 @@ namespace KeyboardTrainerConsole
                     }
                     for (int i = 0; i < arrayLevel.Length; i++)
                     {
-                        top += arrayNick[i] + " - " + arrayLevel[i] + " lvl" + "\n";
+                        Console.WriteLine(arrayNick[i] + " - " + arrayLevel[i] + " lvl");
                     }
-                    Console.WriteLine(top);
                     OpenFrame();
                     EnterText();
                 }
